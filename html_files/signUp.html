@@ -15,6 +15,7 @@
 
     function formSubmitted(){
         var caps = "";
+        var lowerCheck="";
         const userOutput = document.getElementsByClassName("userOutput")[0];
         const user = document.getElementsByClassName("userName")[0].value;
         const userOutput1 = document.getElementsByClassName("userOutput1")[0];
@@ -22,9 +23,11 @@
         //userOutput.textContent= "Hello " + user + "!";
         //Check user name\
         capsCheck = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";//26 
-        lowerCase = "abcdefghijklmnopqrstuvwxyz"
-       
+        lowerCheck = "abcdefghijklmnopqrstuvwxyz";
+        numbers="1234567890";
+        specialChar="!@#$%^&*()"
         CapsCheck(user,capsCheck);//this worked
+        lowerCase(user,lowerCheck);
         
     
 
@@ -72,7 +75,51 @@
         
         
 
-    }
+    }// end of upper case
+
+
+
+
+
+    function lowerCase(user,lowerCase){
+        var lowerCase;
+        const userOutput = document.getElementsByClassName("userOutput")[0]; //this needs to be here to show the result 
+        const errorOutput = document.getElementsByClassName("errorOutput")[0];
+        lowerCase="false";
+        for (let i = 0 ;i < lowerCase.length; i++)
+        {   
+            for ( let j=0;j < user.length; j++ )
+            {      
+                 if (user.charAt(j)===lowerCase.charAt(i))
+                 {
+                    
+                    result = user.charAt(j);
+                    userOutput.textContent = result;
+                    errorOutput.textContent = "";
+                    //return capsCheck.charAt(i) ;
+                    lowerCase="true";
+                    break;
+                }
+            }
+            
+            //console.log(caps);
+        }// this is a block 
+
+        if (lowerCase === "false"){
+
+            console.log("no lowercase letters found!!");
+            return lowerCase;
+            
+        }
+
+        if(lowerCase === "true"){
+            console.log("Lowercase letters found!!");
+            return lowerCase;
+        }
+        
+        
+
+    }//end of lowercase
 
 </script>
 
