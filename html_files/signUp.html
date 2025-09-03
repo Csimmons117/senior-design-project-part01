@@ -27,7 +27,9 @@
         numbers="1234567890";
         specialChar="!@#$%^&*()"
         CapsCheck(user,capsCheck);//this worked
-        lowerCase(user,lowerCheck);
+        lowerCase(user,lowerCheck);// this worked 
+        specialCHAR(user,specialChar); // this worked
+        numberCheck(user,numbers);
         
     
 
@@ -82,10 +84,10 @@
 
 
     function lowerCase(user,lowerCase){
-        var lowerCase;
+        var lower;
         const userOutput = document.getElementsByClassName("userOutput")[0]; //this needs to be here to show the result 
         const errorOutput = document.getElementsByClassName("errorOutput")[0];
-        lowerCase="false";
+        lower="false";
         for (let i = 0 ;i < lowerCase.length; i++)
         {   
             for ( let j=0;j < user.length; j++ )
@@ -97,7 +99,7 @@
                     userOutput.textContent = result;
                     errorOutput.textContent = "";
                     //return capsCheck.charAt(i) ;
-                    lowerCase="true";
+                    lower="true";
                     break;
                 }
             }
@@ -105,22 +107,103 @@
             //console.log(caps);
         }// this is a block 
 
-        if (lowerCase === "false"){
+        if (lower === "false"){
 
             console.log("no lowercase letters found!!");
-            return lowerCase;
+            return lower;
             
         }
 
-        if(lowerCase === "true"){
+        if(lower === "true"){
             console.log("Lowercase letters found!!");
-            return lowerCase;
+            return lower;
         }
         
         
 
     }//end of lowercase
 
+
+
+    function specialCHAR(user,specialChar){
+        var special;
+        const userOutput = document.getElementsByClassName("userOutput")[0]; //this needs to be here to show the result 
+        const errorOutput = document.getElementsByClassName("errorOutput")[0];
+        special="false";
+        for (let i = 0 ;i < specialChar.length; i++)
+        {   
+            for ( let j=0;j < user.length; j++ )
+            {      
+                 if (user.charAt(j)===specialChar.charAt(i))
+                 {
+                    
+                    result = user.charAt(j);
+                    userOutput.textContent = result;
+                    errorOutput.textContent = "";
+                    //return capsCheck.charAt(i) ;
+                    special="true";
+                    break;
+                }
+            }
+            
+            //console.log(caps);
+        }// this is a block 
+
+        if (special === "false"){
+
+            console.log("no special characters found!!");
+            return special;
+            
+        }
+
+        if(special === "true"){
+            console.log("Special Characters found!!");
+            return special;
+        }
+        
+        
+
+    }// end of specialcharacters
+
+    function numberCheck(user,numbers){
+        var int;
+        const userOutput = document.getElementsByClassName("userOutput")[0]; //this needs to be here to show the result 
+        const errorOutput = document.getElementsByClassName("errorOutput")[0];
+        int="false";
+        for (let i = 0 ;i < numbers.length; i++)
+        {   
+            for ( let j=0;j < user.length; j++ )
+            {      
+                 if (user.charAt(j)===numbers.charAt(i))
+                 {
+                    
+                    result = user.charAt(j);
+                    userOutput.textContent = result;
+                    errorOutput.textContent = "";
+                    //return capsCheck.charAt(i) ;
+                    int="true";
+                    break;
+                }
+            }
+            
+            //console.log(caps);
+        }// this is a block 
+
+        if (int === "false"){
+
+            console.log("no numbers found!!");
+            return int;
+            
+        }
+
+        if(int === "true"){
+            console.log("numbers found!!");
+            return int;
+        }
+        
+        
+
+    }// end of number checker
 </script>
 
 
