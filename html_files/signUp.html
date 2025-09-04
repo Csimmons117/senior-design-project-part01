@@ -20,6 +20,7 @@
         const user = document.getElementsByClassName("userName")[0].value;
         const userOutput1 = document.getElementsByClassName("userOutput1")[0];
         const userOutput2 = document.getElementsByClassName("userOutput2")[0];
+        const errorOutput = document.getElementsByClassName("errorOutput")[0];
         //userOutput.textContent= "Hello " + user + "!";
         //Check user name\
         capsCheck = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";//26 
@@ -36,8 +37,11 @@
 
         if (!hasCaps || !haslower || !hasSpecial || !hasNumber){
             console.log("helloworld");
+            errorOutput.textContent = "You are missing some values please double check if you have at least one upper case letter , at least one low case letter, at least one number, and finally at least one special character.";
+            userOutput.textContent = "";
         }else{
-            console.log("Everything is here!")// This returns a true statement if there is a capital letter
+            userOutput.textContent = "You have entered the correct values thank you";// This returns a true statement if there is a capital letter
+            errorOutput.textContent = "";
         }
     
 
