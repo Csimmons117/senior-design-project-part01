@@ -14,7 +14,7 @@ nav{
     margin-top: -20px;
     display: flex;
     justify-content: center;
-    border: blue,10px,solid;
+    /* border: blue,10px,solid; */
 }
 nav ul{
     display: flex;
@@ -26,7 +26,7 @@ nav ul{
 nav li{
     font-size: 20px;
     
-    border: 10px,black,solid;
+    /* border: 10px,black,solid; */
 }
 nav li:hover{
     background-color: white;
@@ -49,10 +49,10 @@ a:hover{
     
     width: 100px;
     height: 100px;
-    border: black,10px,solid;
+    /* border: black,10px,solid; */
 }
 .logoBox{
-    border: black,10px,solid;
+    /* border: black,10px,solid; */
     display: flex;
     justify-content: center;
      align-items: center;   
