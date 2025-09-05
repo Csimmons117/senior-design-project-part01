@@ -16,8 +16,18 @@
     function formSubmitted(){
         var caps = "false";
         var lowerCheck="";
-        const userOutput = document.getElementsByClassName("userOutput")[0];
-        const user = document.getElementsByClassName("userName")[0].value;
+        const firstName = document.getElementsByClassName("firstName")[0].value;
+        const lastName  = document.getElementsByClassName("lastName")[0].value;
+        const studentID = document.getElementsByClassName("studentID")[0].value;
+        const email     = document.getElementsByClassName("email")[0].value;
+        const user      = document.getElementsByClassName("userName")[0].value; // getting the value of the username
+        const passsword = document.getElementsByClassName("password")[0].value;
+
+
+
+
+        // output for the data
+        const userOutput  = document.getElementsByClassName("userOutput")[0];
         const userOutput1 = document.getElementsByClassName("userOutput1")[0];
         const userOutput2 = document.getElementsByClassName("userOutput2")[0];
         const errorOutput = document.getElementsByClassName("errorOutput")[0];
@@ -43,9 +53,13 @@
             userOutput.textContent = "You have entered the correct values thank you";// This returns a true statement if there is a capital letter
             errorOutput.textContent = "";
         }
-    
 
-        
+
+        //const = ;
+        //const = ;
+        //const = ;
+        //const = ;
+        //const = ;
     }
 
 
@@ -249,19 +263,19 @@
 <div class="container">
  <form>
     Enter your firstname:
-    <input type="text" placeholder="First name..." style="height: 30px; font-size: 20px;" ></input>
+    <input type="text" placeholder="First name..." class="firstName" style="height: 30px; font-size: 20px;" ></input>
     <br>
     <br>
     Enter your lastname:
-    <input type="text" placeholder="Last name..." style="height: 30px; font-size: 20px;"></input>
+    <input type="text" placeholder="Last name..." class="lastName" style="height: 30px; font-size: 20px;"></input>
     <br>
     <br>
     Enter your Student ID Number:
-    <input type="number" placeholder="studentID#..." maxlength="9" style="height: 30px; font-size: 20px;"></input>
+    <input type="number" placeholder="studentID#..." maxlength="9"  class="studentID" style="height: 30px; font-size: 20px;"></input>
     <br>
     <br>
     Enter your CSUN email:
-    <input type="email" placeholder="CSUN Email..." style="height: 30px; font-size: 20px;"></input>
+    <input type="email" placeholder="CSUN Email..."  class="email" style="height: 30px; font-size: 20px;"></input>
     <br>
     <br>
     --Enter your username:
@@ -269,7 +283,7 @@
     <br>
     <br>
     Enter your password:
-    <input type="password" placeholder="Password..." style="height: 30px;font-size: 20px;"></input>
+    <input type="password" placeholder="Password..."  class="password" style="height: 30px;font-size: 20px;"></input>
     <br>
     <br>
     <input type="button" value="Submit" class="submitButton" style="height: 40px; font-size: 30px;"></input>
