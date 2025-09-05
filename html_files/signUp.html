@@ -54,12 +54,20 @@
             errorOutput.textContent = "";
         }
 
-
-        //const = ;
-        //const = ;
-        //const = ;
-        //const = ;
-        //const = ;
+        console.log("...");
+        const hasCapsFirst    = CapsCheck(firstName,capsCheck);
+        const hasLowerFirst   = lowerCase(firstName,lowerCheck);
+        const hasSpecialFirst = specialCHAR(firstName,specialChar);
+        const hasNumberFirst  = numberCheck(firstName,numbers);
+        
+        if (!hasCapsFirst || !hasLowerFirst || !hasSpecialFirst || !hasNumberFirst){
+            
+            errorOutput.textContent = "You are missing some values please double check if you have at least one upper case letter , at least one low case letter, at least one number, and finally at least one special character.";
+            userOutput.textContent = "";
+        }else{
+            userOutput.textContent = "You have entered the correct values thank you";// This returns a true statement if there is a capital letter
+            errorOutput.textContent = "";
+        }
     }
 
 
