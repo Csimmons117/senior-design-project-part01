@@ -27,21 +27,27 @@
 
 
         // output for the data
-        const userOutput    = document.getElementsByClassName("userOutput")[0];
-        const userOutput1   = document.getElementsByClassName("userOutput1")[0];
-        const userOutput2   = document.getElementsByClassName("userOutput2")[0];
-        const errorOutput   = document.getElementsByClassName("errorOutput")[0];
+        const test   = document.getElementsByClassName("test")   [0];
+        const userOutput   = document.getElementsByClassName("userOutput")   [0];
+        const errorOutput   = document.getElementsByClassName("errorOutput") [0];
+        const userOutput2   = document.getElementsByClassName("userOutput2") [0];
         const errorOutput2  = document.getElementsByClassName("errorOutput2")[0];
-        const userOutput3   = document.getElementsByClassName("userOutput3")[0];
+        const userOutput3   = document.getElementsByClassName("userOutput3") [0];
         const errorOutput3  = document.getElementsByClassName("errorOutput3")[0];
-        const userOutput4   = document.getElementsByClassName("userOutput4")[0];
+        const userOutput4   = document.getElementsByClassName("userOutput4") [0];
         const errorOutput4  = document.getElementsByClassName("errorOutput4")[0];
+        const userOutput5   = document.getElementsByClassName("userOutput5") [0];
+        const errorOutput5  = document.getElementsByClassName("errorOutput5")[0];
+        const userOutput6   = document.getElementsByClassName("userOutput6") [0];
+        const errorOutput6  = document.getElementsByClassName("errorOutput6")[0];
+        const userOutput7   = document.getElementsByClassName("userOutput7") [0];
+        const errorOutput7  = document.getElementsByClassName("errorOutput7")[0];
         //userOutput.textContent= "Hello " + user + "!";
         //Check user name\
         capsCheck = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";//26 
         lowerCheck = "abcdefghijklmnopqrstuvwxyz";
         numbers="1234567890";
-        specialChar="!@#$%^&*()";
+        specialChar="!@#$%^&*(.)";
 
         console.log("### First Name ###");
         const hasCapsFirst    = CapsCheck(firstName,capsCheck);
@@ -51,11 +57,11 @@
         
         if (!hasCapsFirst || !hasLowerFirst || hasSpecialFirst || hasNumberFirst){
             console.log("Hello");
-            errorOutput2.textContent = "[WARNING] You entered a number or a special character that needs to be removed. ";
+            errorOutput2.textContent = "[WARNING] Error";
             userOutput2.textContent = "";
         }else{
             console.log("World");
-            userOutput2.textContent = "You have entered the correct values thank you";// This returns a true statement if there is a capital letter
+            userOutput2.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
             errorOutput2.textContent = "";
         }
 
@@ -76,6 +82,10 @@
             errorOutput3.textContent = "";
         }
 
+
+
+        // might have to add something here to get the max limits
+
         console.log("### StudentID ###");
         const IDCaps    = CapsCheck(studentID,capsCheck);      //worked
         const IDlower   = lowerCase(studentID,lowerCheck);     //worked 
@@ -93,9 +103,27 @@
             errorOutput4.textContent = "";
         }
 
+        console.log("### Email ###");
+        //const emailCaps    = CapsCheck(email,capsCheck);      //worked
+        const emaillower   = lowerCase(email,lowerCheck);     //worked 
+        const emailSpecial = specialCHAR(email,specialChar);  //worked
+        const emailNumber  = numberCheck(email,numbers);      //worked
+        console.log("#################");
+        //console.log(emailCaps);
+        console.log(emaillower);
+        console.log(emailSpecial);
+        console.log(emailNumber);
+        console.log("#################");
 
-
-
+        if (!emaillower || !emailSpecial || !emailNumber){
+            //console.log("helloworld");
+            errorOutput5.textContent = "[Warning] Error";
+            userOutput5.textContent = "";
+            test.textContent = email;
+        }else{
+            userOutput5.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            errorOutput5.textContent = "";
+        }
 
         console.log("### Username ###");
         const hasCaps    = CapsCheck(user,capsCheck);      //worked
@@ -107,15 +135,30 @@
 
         if (!hasCaps || !haslower || !hasSpecial || !hasNumber){
             //console.log("helloworld");
-            errorOutput.textContent = "You are missing some values please double check if you have at least one upper case letter , at least one low case letter, at least one number, and finally at least one special character.";
-            userOutput.textContent = "";
+            errorOutput6.textContent = "[Warning] Error";
+            userOutput6.textContent = "";
         }else{
-            userOutput.textContent = "You have entered the correct values thank you";// This returns a true statement if there is a capital letter
-            errorOutput.textContent = "";
+            userOutput6.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            errorOutput6.textContent = "";
         }
 
         
+        console.log("### Password ###");
+        const passCaps    = CapsCheck(password,capsCheck);      //worked
+        const passlower   = lowerCase(password,lowerCheck);     //worked 
+        const passSpecial = specialCHAR(password,specialChar);  //worked
+        const passNumber  = numberCheck(password,numbers);      //worked
+        
+        
 
+        if (!passCaps || !passlower || !passSpecial || !passNumber){
+            //console.log("helloworld");
+            errorOutput7.textContent = "[Warning] Error";
+            userOutput7.textContent = "";
+        }else{
+            userOutput7.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            errorOutput7.textContent = "";
+        }
 
 
     }
@@ -342,14 +385,21 @@
     Enter your CSUN email:
     <input type="email" placeholder="CSUN Email..."  class="email" style="height: 30px; font-size: 20px;"></input>
     <br>
+    <div class="errorOutput5" style="color: black;"></div>
+    <div class="userOutput5" style="color: black;"></div>
+    <div class="test" style="color: black;"></div>
     <br>
-    --Enter your username:
+    Enter your username:
     <input type="text" placeholder="Username..." class="userName" style="height: 30px; font-size: 20px;"></input>
     <br>
+    <div class="errorOutput6" style="color: black;"></div>
+    <div class="userOutput6" style="color: black;"></div>
     <br>
     Enter your password:
     <input type="password" placeholder="Password..."  class="password" style="height: 30px;font-size: 20px;"></input>
     <br>
+    <div class="errorOutput7" style="color: black;"></div>
+    <div class="userOutput7" style="color: black;"></div>
     <br>
     <input type="button" value="Submit" class="submitButton" style="height: 40px; font-size: 30px;"></input>
     </form>
@@ -357,11 +407,8 @@
 
 
 </div>
-
-<div class="errorOutput"></div>
-<!-- <div class="errorOutput2"></div> -->
-<div class="userOutput"></div>
-<div class="userOutput2"></div>
+<div class="errorOutput" style="color: black;"></div>
+<div class="userOutput" style="color: black;"></div>
 
 </body>
 
