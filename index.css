@@ -77,3 +77,75 @@ a:hover{
 .userOutput{
     font-size: 30px;
 }
+
+
+
+.title{
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	background-color: #FF0055;
+}
+.main{
+	display:inline-flex;
+	
+	width: 100%;
+	height: 50%;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	background-color: #FF0055;
+
+}
+
+.picture{
+	width: 150px;
+	height: 150px;
+	border: 2px,solid black;
+	overflow: hidden;
+	background-color: black;
+
+	
+}
+.picture img{
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+
+}
+.words{
+	display: flex;
+	flex-direction: column;
+	align-items: center;      /* horizontal centering */
+	justify-content: center;  /* vertical centering */
+	text-align: center;
+	
+	height: 150px;
+}
+.space{
+	width: 50px;
+}
+
+
+
+.Announcements{
+	margin-left: auto;
+	margin-right: auto;
+	width: 35%;
+	/*border: blue, 10px, solid;*/
+	display: flex; /*this must be here before the center*/
+	justify-content: center;/*Center the main div */
+
+}
+.imageLeft{
+	border: black, 5px, solid;
+
+}
+
+.description{
+	padding: 10px;
+	border: black, 5px, solid;
+	text-align: center;
+	background-color: #FF0055;
+	color: white;
+}
