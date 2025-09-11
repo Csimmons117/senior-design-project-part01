@@ -149,3 +149,32 @@ a:hover{
 	background-color: #FF0055;
 	color: white;
 }
+
+.chart{
+    float: left;
+
+}
+.chart{
+    margin-left: auto;
+	margin-right: auto;
+	width: 100%;  /*changed to center table*/
+	/*border: blue, 10px, solid;*/
+	display: flex; /*this must be here before the center*/
+	justify-content: center;/*Center the main div */
+
+}
+td{
+    padding: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
