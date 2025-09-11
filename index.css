@@ -150,22 +150,24 @@ a:hover{
 	color: white;
 }
 
-.chart{
+.containerBox{
+	
+	padding: 20px;
+	display: flex;
+	background-image: url(./pictures/src_gym_image.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	border: black,10px,solid;
+}
+
+.childBox{
+	font-size: 40px;
+	width: 50%;
     float: left;
+    padding: 20px;
+    color:black;
+}
 
-}
-.chart{
-    margin-left: auto;
-	margin-right: auto;
-	width: 100%;  /*changed to center table*/
-	/*border: blue, 10px, solid;*/
-	display: flex; /*this must be here before the center*/
-	justify-content: center;/*Center the main div */
-
-}
-td{
-    padding: 10px;
-}
 
 
 
