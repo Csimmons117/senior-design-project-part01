@@ -3,7 +3,29 @@
 <head> 
     <title>Student Recreation Center</title>
     <link rel="stylesheet" href="./index.css">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        window.onload = function() {
+        // Select each button using querySelector
+        const mondayBtn = document.querySelector(".Monday");
+        const tuesdayBtn = document.querySelector(".Tuesday");
+        const wednesdayBtn = document.querySelector(".Wednesday");
+        const thursdayBtn = document.querySelector(".Thursday");
+        const fridayBtn = document.querySelector(".Friday");
+
+        mondayBtn.addEventListener('click', gymHours);
+        function gymHours(){
+            const whatDay= event.target.className;
+
+            switch(whatDay){
+                case'Monday':
+                alert("Hello world!");
+                break;
+
+                // need to add an image here.
+            }
+        }
+    };
+    </script>
 
 </head>
 <div class="logoBox">
@@ -44,11 +66,11 @@
     <div class="childBox">
     <h3>Gym chart</h3>
 
-        <input type="button" value="Monday" style="width: 100px;height: 30px; font-size: 20px;"></input>
-        <input type="button" value="Tuesday" style="width: 100px;height: 30px; font-size: 20px;"></input>
-        <input type="button" value="Wednesday" style="width: 120px;height: 30px; font-size: 20px;"></input>
-        <input type="button" value="Thursday" style="width: 100px;height: 30px; font-size: 20px;"></input>
-        <input type="button" value="Friday" style="width: 100px;height: 30px; font-size: 20px;"></input>
+        <input class="Monday" type="button" value="Monday" style="width: 100px;height: 30px; font-size: 20px;"></input>
+        <input class="Tuesday" type="button" value="Tuesday" style="width: 100px;height: 30px; font-size: 20px;"></input>
+        <input class="Wednesday" type="button" value="Wednesday" style="width: 120px;height: 30px; font-size: 20px;"></input>
+        <input class="Thursday" type="button" value="Thursday" style="width: 100px;height: 30px; font-size: 20px;"></input>
+        <input class="Friday" type="button" value="Friday" style="width: 100px;height: 30px; font-size: 20px;"></input>
 
 
     </div>
