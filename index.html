@@ -11,17 +11,39 @@
         const wednesdayBtn = document.querySelector(".Wednesday");
         const thursdayBtn = document.querySelector(".Thursday");
         const fridayBtn = document.querySelector(".Friday");
+        const clearBtn = document.querySelector(".Clear");
 
         mondayBtn.addEventListener('click', gymHours);
+        tuesdayBtn.addEventListener('click', gymHours);
+        wednesdayBtn.addEventListener('click',gymHours);
+        thursdayBtn.addEventListener('click',gymHours);
+        fridayBtn.addEventListener('click',gymHours);
+        clearBtn.addEventListener('click',gymHours);
+
         function gymHours(){
             const whatDay= event.target.className;
+            const imageGymTime = document.getElementsByClassName("imageGymTime")[0];
 
             switch(whatDay){
                 case'Monday':
-                alert("Hello world!");
+                imageGymTime.innerHTML = '<img src="./pictures/monday.png" alt="Gym Image">';
                 break;
-
-                // need to add an image here.
+                case'Tuesday':
+                imageGymTime.innerHTML = '<img src="./pictures/tuesday.png" alt="Gym Image">';
+                break;
+                case'Wednesday':
+                imageGymTime.innerHTML = '<img src="./pictures/wednesday.png" alt="Gym Image">';
+                break;
+                case'Thursday':
+                imageGymTime.innerHTML = '<img src="./pictures/thursday.png" alt="Gym Image">';
+                break;
+                case'Friday':
+                imageGymTime.innerHTML = '<img src="./pictures/friday.png" alt="Gym Image">';
+                break;
+                case'Clear':
+                imageGymTime.innerHTML = "";
+                break;
+                
             }
         }
     };
@@ -71,8 +93,9 @@
         <input class="Wednesday" type="button" value="Wednesday" style="width: 120px;height: 30px; font-size: 20px;"></input>
         <input class="Thursday" type="button" value="Thursday" style="width: 100px;height: 30px; font-size: 20px;"></input>
         <input class="Friday" type="button" value="Friday" style="width: 100px;height: 30px; font-size: 20px;"></input>
+        <input class="Clear" type="button" value="Clear" style="width: 100px;height: 30px; font-size: 20px;"></input>
 
-        <div>hello world</div>
+        <div class="imageGymTime"></div>
 
 
     </div>
