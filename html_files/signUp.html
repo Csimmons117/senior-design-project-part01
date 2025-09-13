@@ -11,24 +11,44 @@
         for (const button of submissionButton){
             button.addEventListener("click", formSubmitted);
         }
+
+        document.querySelector('.studentID').addEventListener('input', function () {
+        if (this.value.length > 9) {
+        this.value = this.value.slice(0, 9);
+        }
+        });
     }
 
     function formSubmitted(){
         var caps = "false";
         var lowerCheck="";
         const firstName = document.getElementsByClassName("firstName")[0].value;
-        const lastName  = document.getElementsByClassName("lastName")[0].value;
+        const lastName  = document.getElementsByClassName("lastName") [0].value;
         const studentID = document.getElementsByClassName("studentID")[0].value;
-        const email     = document.getElementsByClassName("email")[0].value;
-        const user      = document.getElementsByClassName("userName")[0].value; // getting the value of the username
-        const password = document.getElementsByClassName("password")[0].value;
+        const email     = document.getElementsByClassName("email")    [0].value;
+        const user      = document.getElementsByClassName("userName") [0].value; // getting the value of the username
+        const password  = document.getElementsByClassName("password") [0].value;
+       
+        var first    =false;
+        var last     =false;
+        var id       =false;
+        var Email    =false;
+        var username =false;
+        var pass     =false;
 
+     //######## chatgpt
+     document.querySelector('.studentID').addEventListener('input', function () {
+        if (this.value.length > 9) {
+        this.value = this.value.slice(0, 9);
+        }
+        });
+    //######## Chatgpt
 
 
 
         // output for the data
         //const test   = document.getElementsByClassName("test")   [0];
-        const userOutput   = document.getElementsByClassName("userOutput")   [0];
+        const userOutput    = document.getElementsByClassName("userOutput")  [0];
         const errorOutput   = document.getElementsByClassName("errorOutput") [0];
         const userOutput2   = document.getElementsByClassName("userOutput2") [0];
         const errorOutput2  = document.getElementsByClassName("errorOutput2")[0];
@@ -49,23 +69,26 @@
         numbers="1234567890";
         specialChar="!@#$%^&*(.)";
 
-        console.log("### First Name ###");
+        // console.log("### First Name ###");
         const hasCapsFirst    = CapsCheck(firstName,capsCheck);
         const hasLowerFirst   = lowerCase(firstName,lowerCheck);
         const hasSpecialFirst = specialCHAR(firstName,specialChar);
         const hasNumberFirst  = numberCheck(firstName,numbers);
         
-        if (!hasCapsFirst || !hasLowerFirst || hasSpecialFirst || hasNumberFirst){
-            console.log("Hello");
-            errorOutput2.textContent = "[WARNING] Error";
+        if (!hasCapsFirst || !hasLowerFirst || hasSpecialFirst || hasNumberFirst && first){
+            // console.log("Hello");
+            errorOutput2.textContent = "You must have one upper case and lower case letter.";
             userOutput2.textContent = "";
+            first=false; 
+            
         }else{
-            console.log("World");
-            userOutput2.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            // console.log("World");
+            userOutput2.textContent = "✓";// good
             errorOutput2.textContent = "";
+            first = true;
         }
-
-        console.log("### Last Name ###");
+        
+        // console.log("### Last Name ###");
         const lastCaps    = CapsCheck(lastName,capsCheck);      //worked
         const lastlower   = lowerCase(lastName,lowerCheck);     //worked 
         const lastSpecial = specialCHAR(lastName,specialChar);  //worked
@@ -75,18 +98,22 @@
 
         if (!lastCaps || !lastlower || lastSpecial || lastNumber){
             //console.log("helloworld");
-            errorOutput3.textContent = "[Warning] Error";
+            errorOutput3.textContent = "You must have one upper case and lower case letter.";
             userOutput3.textContent = "";
+            last     =false;
+            
         }else{
-            userOutput3.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            userOutput3.textContent = "✓";//good
             errorOutput3.textContent = "";
+            last     =true;
+            
         }
 
 
 
         // might have to add something here to get the max limits
 
-        console.log("### StudentID ###");
+        // console.log("### StudentID ###");
         const IDCaps    = CapsCheck(studentID,capsCheck);      //worked
         const IDlower   = lowerCase(studentID,lowerCheck);     //worked 
         const IDSpecial = specialCHAR(studentID,specialChar);  //worked
@@ -96,36 +123,46 @@
 
         if (IDCaps || IDlower || IDSpecial || !IDNumber){
             //console.log("helloworld");
-            errorOutput4.textContent = "[Warning] Error";
+            
+            errorOutput4.textContent = "Must enter your student ID";
             userOutput4.textContent = "";
+            id       =false;
+            
         }else{
-            userOutput4.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            userOutput4.textContent = "✓";//good
             errorOutput4.textContent = "";
+            id       =true;
+            
+
         }
 
-        console.log("### Email ###");
+        // console.log("### Email ###");
         //const emailCaps    = CapsCheck(email,capsCheck);      //worked
         const emaillower   = lowerCase(email,lowerCheck);     //worked 
         const emailSpecial = specialCHAR(email,specialChar);  //worked
         const emailNumber  = numberCheck(email,numbers);      //worked
-        console.log("#################");
+        // console.log("#################");
         //console.log(emailCaps);
-        console.log(emaillower);
-        console.log(emailSpecial);
-        console.log(emailNumber);
-        console.log("#################");
+        //console.log(emaillower);
+        //console.log(emailSpecial);
+        //console.log(emailNumber);
+        //console.log("#################");
 
-        if (!emaillower || !emailSpecial || !emailNumber){
+        if (!emaillower || !emailSpecial ){
             //console.log("helloworld");
-            errorOutput5.textContent = "[Warning] Error";
+            errorOutput5.textContent = "Must enter a valid email!";
             userOutput5.textContent = "";
+            Email    =false;
+            
             //test.textContent = email;
         }else{
-            userOutput5.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            userOutput5.textContent = "✓";// good 
             errorOutput5.textContent = "";
+            Email    =true;
+            
         }
 
-        console.log("### Username ###");
+        //console.log("### Username ###");
         const hasCaps    = CapsCheck(user,capsCheck);      //worked
         const haslower   = lowerCase(user,lowerCheck);     //worked 
         const hasSpecial = specialCHAR(user,specialChar);  //worked
@@ -135,15 +172,19 @@
 
         if (!hasCaps || !haslower || !hasSpecial || !hasNumber){
             //console.log("helloworld");
-            errorOutput6.textContent = "[Warning] Error";
+            errorOutput6.textContent = "Must have an upper case , low case, special character, and at least one number.";
             userOutput6.textContent = "";
+            username =false;
+            
         }else{
-            userOutput6.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            userOutput6.textContent = "✓";// good
             errorOutput6.textContent = "";
+            username =true;
+            
         }
 
         
-        console.log("### Password ###");
+        // console.log("### Password ###");
         const passCaps    = CapsCheck(password,capsCheck);      //worked
         const passlower   = lowerCase(password,lowerCheck);     //worked 
         const passSpecial = specialCHAR(password,specialChar);  //worked
@@ -153,12 +194,35 @@
 
         if (!passCaps || !passlower || !passSpecial || !passNumber){
             //console.log("helloworld");
-            errorOutput7.textContent = "[Warning] Error";
+            errorOutput7.textContent = "Must have an upper case , low case, special character, and at least one number.";
             userOutput7.textContent = "";
+            pass     =false;
+            
         }else{
-            userOutput7.textContent = "[Good!!]";// This returns a true statement if there is a capital letter
+            userOutput7.textContent = "✓";// good
             errorOutput7.textContent = "";
+            pass     =true;
+            
         }
+
+
+        console.log(first);
+        console.log(last);
+        console.log(id);
+        console.log(Email);
+        console.log(username);
+        console.log(pass);
+        
+
+        if(!first||!last||!id||!Email||!username||!pass){
+
+            alert("Retry data entered was not correct.");
+
+        }else{
+            alert('You are have entered the data correctly. \nYou are being redirected to the login page');
+            window.location.href = './login.html';
+        }
+
 
 
     }
@@ -192,13 +256,13 @@
 
         if (caps === false){
 
-            console.log("no caps!!");
+            //console.log("no caps!!");
             return caps;
             
         }
 
         if(caps === true){
-            console.log("Caps found!!");
+           // console.log("Caps found!!");
             return caps;
         }
         
@@ -223,7 +287,7 @@
                  {
                     
                     result = user.charAt(j);
-                    userOutput.textContent = result;
+                    //userOutput.textContent = result;
                     errorOutput.textContent = "";
                     //return capsCheck.charAt(i) ;
                     lower=true;
@@ -236,13 +300,13 @@
 
         if (lower === false){
 
-            console.log("no lowercase letters found!!");
+           // console.log("no lowercase letters found!!");
             return lower;
             
         }
 
         if(lower === true){
-            console.log("Lowercase letters found!!");
+           // console.log("Lowercase letters found!!");
             return lower;
         }
         
@@ -265,8 +329,8 @@
                  {
                     
                     result = user.charAt(j);
-                    userOutput.textContent = result;
-                    errorOutput.textContent = "";
+                    // userOutput.textContent = result;
+                    // errorOutput.textContent = "";
                     //return capsCheck.charAt(i) ;
                     special=true;
                     break;
@@ -277,12 +341,12 @@
         }// this is a block 
 
         if (special === false){
-            console.log("no special characters found!!");
+            //console.log("no special characters found!!");
             return special;
             
         }
         if(special === true){
-            console.log("Special Characters found!!");
+            // console.log("Special Characters found!!");
             return special;
         }
         
@@ -316,13 +380,13 @@
 
         if (int === false){
 
-            console.log("no numbers found!!");
+            // console.log("no numbers found!!");
             return int;
             
         }
 
         if(int === true){
-            console.log("numbers found!!");
+            // console.log("numbers found!!");
             return int;
         }
         
