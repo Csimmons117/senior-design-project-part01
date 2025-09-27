@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Requirement Traceability Matrix (RTM)</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="requirement-traceability-matrix-rtm">Requirement Traceability Matrix (RTM)</h1>
+<p>This matrix links <strong>functional and non-functional requirements</strong> from the SRS to their <strong>design elements (ERD, BPMN, UI)</strong> and <strong>implementation artifacts (DB schema, APIs, code modules)</strong>, as well as planned <strong>test cases</strong>.</p>
+
+<table>
+<thead>
+<tr>
+<th>Req ID</th>
+<th>Requirement Description</th>
+<th>Source (SRS Section)</th>
+<th>Design Artifact</th>
+<th>Implementation Artifact</th>
+<th>Test Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-1</td>
+<td>Student login via SSO / WebAuthn</td>
+<td>SRS §3.1</td>
+<td>BPMN: Login &amp; Check-In; UI: Login Screen</td>
+<td>DB: <code>users</code>, API: <code>/api/login</code></td>
+<td>TC-01: Verify valid login grants session</td>
+</tr>
+<tr>
+<td>FR-2</td>
+<td>Student check-in via QR/NFC</td>
+<td>SRS §3.2</td>
+<td>BPMN: Login &amp; Check-In; ERD: <code>checkins</code></td>
+<td>DB: <code>checkins</code>, API: <code>/api/checkins</code></td>
+<td>TC-02: QR scan logs entry; TC-03: Reject invalid QR</td>
+</tr>
+<tr>
+<td>FR-3</td>
+<td>AI Coaching for workouts</td>
+<td>SRS §3.3</td>
+<td>BPMN: Coaching Request; UI: Coaching Chat</td>
+<td>DB: <code>programs</code>, API: <code>/api/coach/plan</code></td>
+<td>TC-04: Coaching returns plan with ≥2 exercises</td>
+</tr>
+<tr>
+<td>FR-4</td>
+<td>Solo Leveling Feature (XP/Levels)</td>
+<td>SRS §3.4</td>
+<td>BPMN: Solo Leveling; UI: XP bar</td>
+<td>DB: <code>solo_leveling</code>, API: <code>/api/solo-leveling</code></td>
+<td>TC-05: Completing workout grants XP; TC-06: Level up at 100 XP</td>
+</tr>
+<tr>
+<td>FR-5</td>
+<td>Admin dashboard for check-ins</td>
+<td>SRS §3.5</td>
+<td>BPMN: Admin Oversight; UI: Admin Dashboard</td>
+<td>DB: <code>checkins</code> join <code>users</code>, API: <code>/api/admin/checkins</code></td>
+<td>TC-07: Admin sees last 50 check-ins</td>
+</tr>
+<tr>
+<td>NFR-1</td>
+<td>System response &lt;3s</td>
+<td>SRS §4.1</td>
+<td>N/A</td>
+<td>All APIs</td>
+<td>TC-08: Measure latency on check-in</td>
+</tr>
+<tr>
+<td>NFR-2</td>
+<td>Data security (hashed IDs, TLS)</td>
+<td>SRS §4.2</td>
+<td>Security Architecture</td>
+<td>Config: PDO prepared statements, HTTPS</td>
+<td>TC-09: Attempt SQL injection blocked</td>
+</tr>
+</tbody>
+</table></div>
+</body>
+
+</html>
