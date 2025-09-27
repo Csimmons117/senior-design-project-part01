@@ -1,87 +1,130 @@
 ﻿<!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Requirement Traceability Matrix (RTM)</title>
   <link rel="stylesheet" href="https://stackedit.io/style.css" />
 </head>
-
 <body class="stackedit">
-  <div class="stackedit__html"><h1 id="requirement-traceability-matrix-rtm">Requirement Traceability Matrix (RTM)</h1>
-<p>This matrix links <strong>functional and non-functional requirements</strong> from the SRS to their <strong>design elements (ERD, BPMN, UI)</strong> and <strong>implementation artifacts (DB schema, APIs, code modules)</strong>, as well as planned <strong>test cases</strong>.</p>
+  <div class="stackedit__html">
+    <h1 id="requirement-traceability-matrix-rtm">Requirement Traceability Matrix (RTM)</h1>
+    <p>This matrix links <strong>functional and non-functional requirements</strong> from the SRS to their <strong>design artifacts</strong> (ERD, BPMN, UI) and <strong>implementation artifacts</strong> (DB schema, APIs, code modules), plus planned <strong>test cases</strong>. Tables reflect the current ERD: <code>account</code>, <code>authaccount</code>, <code>student</code>, <code>staff</code>, <code>scannerdevice</code>, <code>facility</code>, <code>classtype</code>, <code>classsession</code>, <code>reservation</code>, <code>timeslot</code>, <code>membership</code>, <code>checkin</code>.</p>
 
-<table>
-<thead>
-<tr>
-<th>Req ID</th>
-<th>Requirement Description</th>
-<th>Source (SRS Section)</th>
-<th>Design Artifact</th>
-<th>Implementation Artifact</th>
-<th>Test Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FR-1</td>
-<td>Student login via SSO / WebAuthn</td>
-<td>SRS §3.1</td>
-<td>BPMN: Login &amp; Check-In; UI: Login Screen</td>
-<td>DB: <code>users</code>, API: <code>/api/login</code></td>
-<td>TC-01: Verify valid login grants session</td>
-</tr>
-<tr>
-<td>FR-2</td>
-<td>Student check-in via QR/NFC</td>
-<td>SRS §3.2</td>
-<td>BPMN: Login &amp; Check-In; ERD: <code>checkins</code></td>
-<td>DB: <code>checkins</code>, API: <code>/api/checkins</code></td>
-<td>TC-02: QR scan logs entry; TC-03: Reject invalid QR</td>
-</tr>
-<tr>
-<td>FR-3</td>
-<td>AI Coaching for workouts</td>
-<td>SRS §3.3</td>
-<td>BPMN: Coaching Request; UI: Coaching Chat</td>
-<td>DB: <code>programs</code>, API: <code>/api/coach/plan</code></td>
-<td>TC-04: Coaching returns plan with ≥2 exercises</td>
-</tr>
-<tr>
-<td>FR-4</td>
-<td>Solo Leveling Feature (XP/Levels)</td>
-<td>SRS §3.4</td>
-<td>BPMN: Solo Leveling; UI: XP bar</td>
-<td>DB: <code>solo_leveling</code>, API: <code>/api/solo-leveling</code></td>
-<td>TC-05: Completing workout grants XP; TC-06: Level up at 100 XP</td>
-</tr>
-<tr>
-<td>FR-5</td>
-<td>Admin dashboard for check-ins</td>
-<td>SRS §3.5</td>
-<td>BPMN: Admin Oversight; UI: Admin Dashboard</td>
-<td>DB: <code>checkins</code> join <code>users</code>, API: <code>/api/admin/checkins</code></td>
-<td>TC-07: Admin sees last 50 check-ins</td>
-</tr>
-<tr>
-<td>NFR-1</td>
-<td>System response &lt;3s</td>
-<td>SRS §4.1</td>
-<td>N/A</td>
-<td>All APIs</td>
-<td>TC-08: Measure latency on check-in</td>
-</tr>
-<tr>
-<td>NFR-2</td>
-<td>Data security (hashed IDs, TLS)</td>
-<td>SRS §4.2</td>
-<td>Security Architecture</td>
-<td>Config: PDO prepared statements, HTTPS</td>
-<td>TC-09: Attempt SQL injection blocked</td>
-</tr>
-</tbody>
-</table></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Req ID</th>
+          <th>Requirement Description</th>
+          <th>Source (SRS Section)</th>
+          <th>Design Artifact</th>
+          <th>Implementation Artifact</th>
+          <th>Test Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>FR-1</td>
+          <td>Student login via SSO / WebAuthn (session established)</td>
+          <td>SRS §3.1</td>
+          <td>BPMN: Login &amp; Check-In; UI: Login</td>
+          <td>DB: <code>account</code>, <code>authaccount</code>, <code>student</code> • API: <code>/api/login</code>, <code>/api/logout</code></td>
+          <td>TC-01: Valid SSO/WebAuthn creates session • TC-02: Invalid credentials denied</td>
+        </tr>
+
+        <tr>
+          <td>FR-2</td>
+          <td>Student check-in at facility via QR/NFC</td>
+          <td>SRS §3.2</td>
+          <td>BPMN: Login &amp; Check-In; ERD: <code>checkin</code>, <code>scannerdevice</code>, <code>facility</code></td>
+          <td>DB: <code>checkin(student_id, facility_id, scanner_id, result, method)</code> • API: <code>/api/checkins</code> (POST)</td>
+          <td>TC-03: Successful QR logs row with <code>result='ok'</code> • TC-04: Tampered token → <code>result='denied'</code></td>
+        </tr>
+
+        <tr>
+          <td>FR-3</td>
+          <td>Class discovery &amp; reservation with waitlist support</td>
+          <td>SRS §3.3</td>
+          <td>BPMN: Class Reservation; ERD: <code>classtype</code>, <code>classsession</code>, <code>timeslot</code>, <code>reservation</code></td>
+          <td>DB: <code>classsession</code>, <code>timeslot</code>, <code>reservation(status: booked|waitlisted|canceled|attended|no_show)</code> • API: <code>/api/reservations</code> (POST/DELETE/GET)</td>
+          <td>TC-05: Student can book if capacity not full • TC-06: Becomes <code>waitlisted</code> when full • TC-07: Cancel updates availability</td>
+        </tr>
+
+        <tr>
+          <td>FR-4</td>
+          <td>Membership validation gates access to services</td>
+          <td>SRS §3.4</td>
+          <td>BPMN: Membership Validation; ERD: <code>membership</code></td>
+          <td>DB: <code>membership(status: active|expired|blocked)</code> used by check-in/business rules • API middleware/guard</td>
+          <td>TC-08: <code>active</code> member passes check-in • TC-09: <code>expired</code>/<code>blocked</code> is denied</td>
+        </tr>
+
+        <tr>
+          <td>FR-5</td>
+          <td>AI Personal Trainer: generate workout plan</td>
+          <td>SRS §3.5</td>
+          <td>BPMN: Coaching Request; UI: Coaching Chat</td>
+          <td>DB: store plan JSON in <code>programs</code> (or similar) • API: <code>/api/coach/plan</code> (POST) via GPT wrapper</td>
+          <td>TC-10: Returns a plan with ≥ 2 exercises • TC-11: Redacts PII and logs request meta only</td>
+        </tr>
+
+        <tr>
+          <td>FR-6</td>
+          <td>Solo Leveling Feature: award XP on activity; level-up at thresholds</td>
+          <td>SRS §3.6</td>
+          <td>BPMN: Solo Leveling Feature; UI: XP bar/Level badge</td>
+          <td>DB: XP derived from <code>checkin</code> events (and/or separate XP table if added) • API: <code>/api/solo-leveling/progress</code>, <code>/api/solo-leveling/complete</code></td>
+          <td>TC-12: Check-in grants XP • TC-13: At threshold (e.g., 100 XP) level increments and UI shows badge</td>
+        </tr>
+
+        <tr>
+          <td>FR-7</td>
+          <td>Admin dashboard: recent check-ins, reservations, device health</td>
+          <td>SRS §3.7</td>
+          <td>BPMN: Admin Oversight; ERD: <code>checkin</code>, <code>reservation</code>, <code>scannerdevice</code></td>
+          <td>DB queries joining <code>checkin</code> ↔ <code>student</code> ↔ <code>facility</code> • API: <code>/api/admin/checkins</code>, <code>/api/admin/reservations</code>, <code>/api/admin/devices</code></td>
+          <td>TC-14: Admin sees last 50 check-ins • TC-15: Device offline shown as <code>status='offline'</code></td>
+        </tr>
+
+        <tr>
+          <td>NFR-1</td>
+          <td>Performance: typical API responses &lt; 3s (p95 &lt; 1s internal)</td>
+          <td>SRS §4.1</td>
+          <td>Perf test plan; diagrams</td>
+          <td>All APIs; indexes on FK columns (<code>student_id</code>, <code>facility_id</code>, <code>class_session_id</code>)</td>
+          <td>TC-16: Load test check-in (p95 &lt; 1s) • TC-17: Reservation list (p95 &lt; 1.5s)</td>
+        </tr>
+
+        <tr>
+          <td>NFR-2</td>
+          <td>Security: prepared statements, least-privilege DB user, HTTPS</td>
+          <td>SRS §4.2</td>
+          <td>Security architecture; BPMN annotations</td>
+          <td>PDO prepared statements; app role with limited GRANTs; TLS enabled</td>
+          <td>TC-18: SQLi attempt blocked • TC-19: HTTP downgraded request redirected to HTTPS</td>
+        </tr>
+
+        <tr>
+          <td>NFR-3</td>
+          <td>Privacy/Compliance: no raw card UIDs; log minimization</td>
+          <td>SRS §4.3</td>
+          <td>Data classification matrix</td>
+          <td><code>checkin</code> stores tokenized method only; <code>event_logs</code> redact PII</td>
+          <td>TC-20: Logs contain no email/UID; only hashed/IDs</td>
+        </tr>
+
+        <tr>
+          <td>NFR-4</td>
+          <td>Accessibility: WCAG 2.1 AA for UI</td>
+          <td>SRS §4.4</td>
+          <td>UI prototype a11y review</td>
+          <td>Semantic HTML, contrast &ge; 4.5:1, keyboard nav</td>
+          <td>TC-21: Keyboard-only flows succeed; color-contrast passes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><em>Note:</em> If you later add a dedicated XP table (e.g., <code>solo_leveling</code>), update FR-6 “Implementation Artifact” to reference it explicitly; otherwise keep XP derived from <code>checkin</code> counts plus rules.</p>
+  </div>
 </body>
-
 </html>
