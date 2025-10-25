@@ -1,0 +1,13 @@
+{
+  "name": "ai-fitness-helper-api",
+  "type": "module",
+  "private": true,
+  "scripts": { "dev": "node server.js" },
+  "dependencies": {
+    "@langchain/core": "^0.2.0",
+    "@langchain/openai": "^0.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
