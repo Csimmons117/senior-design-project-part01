@@ -15,10 +15,11 @@ import cors from "cors";
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Increase limit for base64 images
 
 // ---------- Mock + Real LLM Setup ----------
 let getReply; // async (question) => string
+let analyzeImage; // async (imageBase64, prompt) => string
 
 function mockReply(question) {
   const q = (question || "").trim();
@@ -43,9 +44,28 @@ function mockReply(question) {
   ].join("\n");
 }
 
+function mockImageAnalysis(prompt) {
+  return [
+    "Mock Form Analysis (no billing):",
+    "",
+    "✅ Good points:",
+    "- Neutral spine position",
+    "- Knees tracking over toes",
+    "- Good depth on the squat",
+    "",
+    "⚠️ Areas to improve:",
+    "- Keep chest more upright",
+    "- Engage core throughout the movement",
+    "- Ensure weight is distributed evenly on feet",
+    "",
+    prompt ? `Analysis for: "${prompt}"` : ""
+  ].join("\n");
+}
+
 if (MOCK) {
   console.log("🧪 Running in MOCK mode (AI_MOCK=true). No API calls will be made.");
   getReply = async (question) => mockReply(question);
+  analyzeImage = async (imageBase64, prompt) => mockImageAnalysis(prompt);
 } else {
   // Real model path (requires billing + OPENAI_API_KEY)
   if (!process.env.OPENAI_API_KEY) {
@@ -57,6 +77,7 @@ if (MOCK) {
   const { ChatOpenAI } = await import("@langchain/openai");
   const { ChatPromptTemplate } = await import("@langchain/core/prompts");
   const { RunnableSequence } = await import("@langchain/core/runnables");
+  const { HumanMessage } = await import("@langchain/core/messages");
 
   const llm = new ChatOpenAI({
     model: "gpt-4o-mini",
@@ -65,12 +86,19 @@ if (MOCK) {
     // project: process.env.OPENAI_PROJECT, // uncomment if your org uses Projects
   });
 
+  // Vision model for image analysis
+  const visionLlm = new ChatOpenAI({
+    model: "gpt-4o-mini", // gpt-4o-mini supports vision
+    temperature: 0.7,
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
   const prompt = ChatPromptTemplate.fromMessages([
     [
       "system",
       `You are a friendly, safe fitness coach.
 Return concise, actionable workout guidance including warm-up, main sets, cooldown, and form cues.
-Adjust intensity to user's experience if mentioned. 
+Adjust intensity to user's experience if mentioned.
 If medical concerns arise, recommend consulting a professional.`
     ],
     ["human", "{question}"]
@@ -80,6 +108,33 @@ If medical concerns arise, recommend consulting a professional.`
   getReply = async (question) => {
     const aiMsg = await chain.invoke({ question });
     return aiMsg.content;
+  };
+
+  // Image analysis function
+  analyzeImage = async (imageBase64, userPrompt = "Analyze my exercise form") => {
+    const message = new HumanMessage({
+      content: [
+        {
+          type: "text",
+          text: `You are a professional fitness coach analyzing exercise form. ${userPrompt}
+
+Provide specific, actionable feedback on:
+1. What they're doing well
+2. What needs improvement
+3. Safety concerns (if any)
+4. Specific form cues to help them improve
+
+Be encouraging but honest. If you can't clearly see the exercise or form, say so.`
+        },
+        {
+          type: "image_url",
+          image_url: { url: imageBase64 }
+        }
+      ]
+    });
+
+    const response = await visionLlm.invoke([message]);
+    return response.content;
   };
 }
 
@@ -112,6 +167,43 @@ app.post("/api/trainer", async (req, res) => {
       e?.response?.data || e?.cause?.response?.data || e?.message || String(e);
     console.error("❌ LangChain error:", detail);
     res.status(502).json({ error: "Model call failed", detail });
+  }
+});
+
+// Chat endpoint (used by frontend)
+app.post("/api/chat", async (req, res) => {
+  try {
+    const message = req.body?.message ?? "";
+    if (!message) return res.status(400).json({ error: "Missing message" });
+
+    const reply = await getReply(message);
+    res.json({ reply });
+  } catch (e) {
+    const detail =
+      e?.response?.data || e?.cause?.response?.data || e?.message || String(e);
+    console.error("❌ Chat error:", detail);
+    res.status(502).json({ error: "Chat failed", detail });
+  }
+});
+
+// Image analysis endpoint
+app.post("/api/analyze-form", async (req, res) => {
+  try {
+    const { image, prompt } = req.body;
+    if (!image) return res.status(400).json({ error: "Missing image data" });
+
+    // Validate base64 image format
+    if (!image.startsWith('data:image/')) {
+      return res.status(400).json({ error: "Invalid image format. Expected base64 data URL" });
+    }
+
+    const reply = await analyzeImage(image, prompt || "Analyze my exercise form");
+    res.json({ reply });
+  } catch (e) {
+    const detail =
+      e?.response?.data || e?.cause?.response?.data || e?.message || String(e);
+    console.error("❌ Image analysis error:", detail);
+    res.status(502).json({ error: "Image analysis failed", detail });
   }
 });
 
