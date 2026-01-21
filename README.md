@@ -1,5 +1,5 @@
 # CSUN CIT 480 Senior Project — Gym App Revamp (Web Version)
-
+# (Website)[https://csimmons117.github.io/senior-design-project-part01/] 
 ## Overview
 This project is our **senior design capstone** for CIT 480 at CSUN.  
 We are redesigning our school’s gym system as a **web application** that integrates campus identity services, secure check-ins, and guided coaching.
