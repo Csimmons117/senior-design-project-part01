@@ -10,23 +10,24 @@ h1{
     font-size: 70px;
 
 }
+/*
 nav{
     margin-top: -20px;
     display: flex;
     justify-content: center;
-    /* border: blue,10px,solid; */
+    /* border: blue,10px,solid; 
 }
 nav ul{
     display: flex;
     text-decoration: none;
-    list-style-type: none;/*removed dot from list*/
+    list-style-type: none;/*removed dot from list
 
 
 }
 nav li{
     font-size: 20px;
 
-    /* border: 10px,black,solid; */
+    /* border: 10px,black,solid; 
 }
 nav li:hover{
     background-color: white;
@@ -44,7 +45,7 @@ a:hover{
     text-decoration: none;
     color: #FF0055;
 }
-
+*/
 .logo{
 
     width: 100px;
@@ -166,4 +167,154 @@ a:hover{
     float: left;
     padding: 20px;
     color:black;
+}
+/*review later */
+
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #111;
+    color: #eee;
+}
+
+/* Hero Header */
+.hero {
+    background: linear-gradient(135deg, #8b0000, #000);
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.hero-logo {
+    height: 80px;
+    margin-bottom: 15px;
+}
+
+.hero h1 {
+    font-size: 36px;
+    color: #fff;
+}
+
+.hero p {
+    color: #ff4d4d;
+    font-size: 18px;
+}
+
+/* Layout */
+.layout {
+    display: flex;
+    min-height: calc(100vh - 200px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: #000;
+    padding: 30px 15px;
+}
+
+.sidebar nav a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-left: 4px solid transparent;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    color: #fff;
+    background-color: #1a1a1a;
+    border-left: 4px solid #b30000;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    padding: 40px;
+}
+
+.content h2 {
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #ff4d4d;
+}
+
+/* Panels */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.panel {
+    background-color: #1a1a1a;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+}
+
+.panel h3 {
+    margin-bottom: 15px;
+    color: #ff4d4d;
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.button-group button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #b30000;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.button-group button:hover {
+    background-color: #ff4d4d;
+    color: black;
+}
+
+.button-group .clear {
+    background-color: #444;
+}
+
+/* Table */
+.gym-hours-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gym-hours-table td {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+}
+
+/* Image */
+.imageGymTime img {
+    max-width: 100%;
+    border-radius: 8px;
+    border: 2px solid #b30000;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #000;
+    color: #aaa;
 }
