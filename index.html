@@ -1,107 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Student Recreation Center</title>
     <link rel="stylesheet" href="./index.css">
+
     <script>
-        window.onload = function() {
-        //  Select each button using querySelector
-        const mondayBtn = document.querySelector(".Monday");
-        const tuesdayBtn = document.querySelector(".Tuesday");
-        const wednesdayBtn = document.querySelector(".Wednesday");
-        const thursdayBtn = document.querySelector(".Thursday");
-        const fridayBtn = document.querySelector(".Friday");
-        const clearBtn = document.querySelector(".Clear");
+        document.addEventListener("DOMContentLoaded", function () {
+            const imageContainer = document.querySelector(".imageGymTime");
+            const buttons = document.querySelectorAll("[data-day]");
 
-        mondayBtn.addEventListener('click', gymHours);
-        tuesdayBtn.addEventListener('click', gymHours);
-        wednesdayBtn.addEventListener('click',gymHours);
-        thursdayBtn.addEventListener('click',gymHours);
-        fridayBtn.addEventListener('click',gymHours);
-        clearBtn.addEventListener('click',gymHours);
+            buttons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const day = this.dataset.day;
 
-        function gymHours(){
-            const whatDay= event.target.className;
-            const imageGymTime = document.getElementsByClassName("imageGymTime")[0];
+                    if (day === "clear") {
+                        imageContainer.innerHTML = "";
+                        return;
+                    }
 
-            switch(whatDay){
-                case'Monday':
-                imageGymTime.innerHTML = '<img src="./pictures/monday.png" alt="Gym Image">';
-                break;
-                case'Tuesday':
-                imageGymTime.innerHTML = '<img src="./pictures/tuesday.png" alt="Gym Image">';
-                break;
-                case'Wednesday':
-                imageGymTime.innerHTML = '<img src="./pictures/wednesday.png" alt="Gym Image">';
-                break;
-                case'Thursday':
-                imageGymTime.innerHTML = '<img src="./pictures/thursday.png" alt="Gym Image">';
-                break;
-                case'Friday':
-                imageGymTime.innerHTML = '<img src="./pictures/friday.png" alt="Gym Image">';
-                break;
-                case'Clear':
-                imageGymTime.innerHTML = "";
-                break;
-
-            }
-        }
-    };
+                    imageContainer.innerHTML = `
+                        <img src="./pictures/${day}.png" alt="${day} gym chart">
+                    `;
+                });
+            });
+        });
     </script>
-
 </head>
-<div class="logoBox">
-    <a href="./index.html"><img src="./pictures/unnamed-Photoroom.png" alt="Student Recreation Center" class="logo" ></li></a>
-    <h1>Student Recreation Center</h1>
-</div>
-<hr>
-<nav>
-    <ul>
-    <li><a href="./index.html">Home</a></li>
-    <li><a href="./html_files/staffMember.html">Staff Members</a></li>
-    <li><a href="./html_files/events.html">Events</a></li><!--Upcoming Programs an Events-->
-    <li><a href="./html_files/signUp.html">Registration</a></li>
-    <li><a href="./html_files/login.html">Login</a></li>
-    </ul>
-</nav>
+
 <body>
-<div class="title">
-    <h1>Home</h1>
-</div>
-<div class="containerBox">
 
-    <div class="childBox">
-    <h3>Gym Hours</h3>
-    <table class="gym-hours-table">
-      <tbody>
-        <tr><td>Monday</td><td>6:00 AM - 10:00 PM</td></tr>
-        <tr><td>Tuesday</td><td>6:00 AM - 10:00 PM</td></tr>
-        <tr><td>Wednesday</td><td>6:00 AM - 10:00 PM</td></tr>
-        <tr><td>Thursday</td><td>6:00 AM - 10:00 PM</td></tr>
-        <tr><td>Friday</td><td>6:00 AM - 10:00 PM</td></tr>
-        <tr><td>Saturday</td><td>9:00 AM - 5:00 PM</td></tr>
-        <tr><td>Sunday</td><td>6:00 AM - 10:00 PM</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-
-    <div class="childBox">
-    <h3>Gym chart</h3>
-
-        <input class="Monday" type="button" value="Monday" style="width: 100px;height: 30px; font-size: 20px;"></input>
-        <input class="Tuesday" type="button" value="Tuesday" style="width: 100px;height: 30px; font-size: 20px;"></input>
-        <input class="Wednesday" type="button" value="Wednesday" style="width: 120px;height: 30px; font-size: 20px;"></input>
-        <input class="Thursday" type="button" value="Thursday" style="width: 100px;height: 30px; font-size: 20px;"></input>
-        <input class="Friday" type="button" value="Friday" style="width: 100px;height: 30px; font-size: 20px;"></input>
-        <input class="Clear" type="button" value="Clear" style="width: 100px;height: 30px; font-size: 20px;"></input>
-
-        <div class="imageGymTime"></div>
-
-
+<header class="hero">
+    <div class="hero-content">
+        <img src="./pictures/unnamed-Photoroom.png" alt="Student Recreation Center" class="hero-logo">
+        <h1>Student Recreation Center</h1>
+        <p>Train. Recover. Perform.</p>
     </div>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <nav>
+            <a class="active" href="./index.html">Home</a>
+            <a href="./html_files/staffMember.html">Staff Members</a>
+            <a href="./html_files/events.html">Events</a>
+            <a href="./html_files/signUp.html">Registration</a>
+            <a href="./html_files/login.html">Login</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <h2>Welcome</h2>
+
+        <div class="content-grid">
+
+            <!-- Gym Chart FIRST (visual focus) -->
+            <section class="panel">
+                <h3>Gym Usage Chart</h3>
+
+                <div class="button-group">
+                    <button data-day="monday">Mon</button>
+                    <button data-day="tuesday">Tue</button>
+                    <button data-day="wednesday">Wed</button>
+                    <button data-day="thursday">Thu</button>
+                    <button data-day="friday">Fri</button>
+                    <button data-day="clear" class="clear">Clear</button>
+                </div>
+
+                <div class="imageGymTime"></div>
+            </section>
+
+            <!-- Gym Hours -->
+            <section class="panel">
+                <h3>Gym Hours</h3>
+                <table class="gym-hours-table">
+                    <tbody>
+                        <tr><td>Monday</td><td>6:00 AM – 10:00 PM</td></tr>
+                        <tr><td>Tuesday</td><td>6:00 AM – 10:00 PM</td></tr>
+                        <tr><td>Wednesday</td><td>6:00 AM – 10:00 PM</td></tr>
+                        <tr><td>Thursday</td><td>6:00 AM – 10:00 PM</td></tr>
+                        <tr><td>Friday</td><td>6:00 AM – 10:00 PM</td></tr>
+                        <tr><td>Saturday</td><td>9:00 AM – 5:00 PM</td></tr>
+                        <tr><td>Sunday</td><td>6:00 AM – 10:00 PM</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </div>
+    </main>
+
 </div>
+
+<footer class="footer">
+    <p>© 2026 Student Recreation Center</p>
+</footer>
 
 </body>
-
 </html>
