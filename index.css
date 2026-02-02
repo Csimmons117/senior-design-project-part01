@@ -320,3 +320,254 @@ body {
     background-color: #000;
     color: #aaa;
 }
+
+
+/* Events */
+.event-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.event-image {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #b30000;
+    flex-shrink: 0;
+}
+
+.event-text h3 {
+    margin-bottom: 5px;
+    color: #ff4d4d;
+}
+
+.event-text p {
+    color: #ccc;
+    font-size: 15px;
+}
+
+
+
+
+/* Global Buttons */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #b30000, #ff4d4d);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(179, 0, 0, 0.6);
+    transition: all 0.25s ease;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+    background: linear-gradient(135deg, #ff4d4d, #ff8080);
+    color: black;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 77, 77, 0.8);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(179, 0, 0, 0.5);
+}
+
+
+/* =====================================
+   SIGN UP PAGE — FORCE MATCH HOME THEME
+   (CSS ONLY — NO HTML CHANGES)
+===================================== */
+
+/* =====================================
+   RESTORE NAV AS SIDEBAR (SIGNUP PAGE)
+===================================== */
+
+/* Re-enable nav */
+nav {
+    display: block;
+}
+
+/* Sidebar container */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: #000;
+    padding: 30px 15px;
+    z-index: 1000;
+}
+
+/* Remove list styling */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Sidebar links */
+nav ul li {
+    padding: 0;
+    margin-bottom: 8px;
+}
+
+nav ul li a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    padding: 12px;
+    border-left: 4px solid transparent;
+    transition: all 0.25s ease;
+}
+
+/* Hover + active feel */
+nav ul li a:hover {
+    color: #fff;
+    background-color: #1a1a1a;
+    border-left: 4px solid #b30000;
+}
+
+/* Push page content right so sidebar doesn't overlap */
+.title,
+.container {
+    margin-left: 220px;
+}
+
+
+
+/* Hide legacy header/nav used on old pages */
+.logoBox,
+hr,
+
+
+/* Match global dark background */
+body {
+    background-color: #111;
+    color: #eee;
+}
+
+/* Recreate HERO header */
+.title {
+    background: linear-gradient(135deg, #8b0000, #000);
+    padding: 50px 20px;
+    margin-bottom: 40px;
+}
+
+.title h1 {
+    font-size: 36px;
+    color: white;
+    text-align: center;
+}
+
+/* Center content like main.content */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px;
+}
+
+/* Form becomes a PANEL */
+.container form {
+    background-color: #1a1a1a;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    font-size: 18px;
+}
+
+/* Labels (your text like "Enter your firstname:") */
+.container form {
+    line-height: 1.8;
+}
+
+/* Inputs */
+.container input[type="text"],
+.container input[type="email"],
+.container input[type="password"],
+.container input[type="number"] {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background-color: #111;
+    color: #eee;
+    font-size: 16px;
+}
+
+/* Placeholder color */
+.container input::placeholder {
+    color: #888;
+}
+
+/* Input focus */
+.container input:focus {
+    outline: none;
+    border-color: #ff4d4d;
+    box-shadow: 0 0 6px rgba(255, 77, 77, 0.6);
+}
+
+/* Validation text */
+.userOutput2,
+.userOutput3,
+.userOutput4,
+.userOutput5,
+.userOutput6,
+.userOutput7 {
+    color: #4dff88 !important;
+    font-size: 18px;
+}
+
+.errorOutput,
+.errorOutput2,
+.errorOutput3,
+.errorOutput4,
+.errorOutput5,
+.errorOutput6,
+.errorOutput7 {
+    color: #ff4d4d !important;
+    font-size: 14px;
+}
+
+/* Submit button — same as home page buttons */
+.submitButton {
+    width: 100%;
+    background: linear-gradient(135deg, #b30000, #ff4d4d);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px !important;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(179, 0, 0, 0.6);
+    transition: all 0.25s ease;
+}
+
+.submitButton:hover {
+    background: linear-gradient(135deg, #ff4d4d, #ff8080);
+    color: black;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 77, 77, 0.8);
+}
+
+.submitButton:active {
+    transform: translateY(0);
+}
+

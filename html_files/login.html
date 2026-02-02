@@ -1,44 +1,65 @@
 <!DOCTYPE html>
-<html>
-
-<head> 
-    <title>Student Recreation Center</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | Student Recreation Center</title>
     <link rel="stylesheet" href="../index.css">
 </head>
-<div class="logoBox">
-    <a href="../index.html"><img src="../pictures/unnamed-Photoroom.png" alt="Student Recreation Center" class="logo" ></li></a>
-    <h1>Student Recreation Center</h1>
-</div>
-<hr>
-<nav>
-    <ul>
-    <li><a href="../index.html">Home</a></li>
-    <li><a href="./staffMember.html">Staff Members</a></li>
-    <li><a href="./events.html">Events</a></li><!--Upcoming Programs an Events-->
-    <li><a href="./signUp.html">Registration</a></li>
-    <li><a href="./login.html">Login</a></li>
-    </ul>
-</nav>
+
 <body>
-<div class="title">
-    <h1>Login</h1>
-</div>
-<div class="container">
-<form>
-Enter your username:
-<input type="text" placeholder="Username..." class="userName" style="height: 30px; font-size: 20px;"></input>
-<br>
-<br>
-Enter your Password:
-<input type="password" placeholder="Password..." class="password" style="height: 30px; font-size: 20px;"></input>
-<br>
-<br>
-<input type="button" value="Submit" style="height: 40px; font-size: 30px;"></input>
-<a href="./login.html"><input type="button" value="Clear" style="height: 40px; font-size: 30px;"></input></a>
-</form>
+
+<header class="hero">
+    <div class="hero-content">
+        <img src="../pictures/unnamed-Photoroom.png" alt="Student Recreation Center" class="hero-logo">
+        <h1>Student Recreation Center</h1>
+        <p>Train. Recover. Perform.</p>
+    </div>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="./staffMember.html">Staff Members</a>
+            <a href="./events.html">Events</a>
+            <a href="./signUp.html">Registration</a>
+            <a class="active" href="./login.html">Login</a>
+        </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+        <h2>Login</h2>
+
+        <div class="content-grid">
+
+            <section class="panel login-panel">
+                <form class="login-form">
+
+                    <label>Username</label>
+                    <input type="text" placeholder="Username">
+
+                    <label>Password</label>
+                    <input type="password" placeholder="Password">
+
+                    <div class="login-buttons">
+                        <button type="submit">Submit</button>
+                        <button type="reset" class="clear">Clear</button>
+                    </div>
+
+                </form>
+            </section>
+
+        </div>
+    </main>
+
 </div>
 
-    
+<footer class="footer">
+    <p>© 2026 Student Recreation Center</p>
+</footer>
+
 </body>
-
 </html>

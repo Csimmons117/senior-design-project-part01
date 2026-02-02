@@ -1,37 +1,69 @@
 <!DOCTYPE html>
-<html>
-<head> 
-    <title>Student Recreation Center</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Events | Student Recreation Center</title>
     <link rel="stylesheet" href="../index.css">
 </head>
-<div class="logoBox">
-    <a href="../index.html"><img src="../pictures/unnamed-Photoroom.png" alt="Student Recreation Center" class="logo" ></li></a>
-    <h1>Student Recreation Center</h1>
-</div>
-<hr>
-<nav>
-    <ul>
-    <li><a href="../index.html">Home</a></li>
-    <li><a href="./staffMember.html">Staff Members</a></li>
-    <li><a href="./events.html">Events</a></li><!--Upcoming Programs an Events-->
-    <li><a href="./signUp.html">Registration</a></li>
-    <li><a href="./login.html">Login</a></li>
-    </ul>
-</nav>
-<body>
-<div class="title">
-    <h1>Events</h1>
-</div>
-<div class="Announcements">
-	<div class="imageLeft">
-		<img src="../pictures/CSUN.png" style="width: 150px; height: 150px;">
-	</div>
-	<div class="description">
 
-		<h3>Welcome back Matador!</h3>
-		<h4>First Day of Classes start 8/23/2025</h4>
-	</div>
+<body>
+
+<header class="hero">
+    <div class="hero-content">
+        <img src="../pictures/unnamed-Photoroom.png" class="hero-logo">
+        <h1>Student Recreation Center</h1>
+        <p>Train. Recover. Perform.</p>
+    </div>
+</header>
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="./staffMember.html">Staff Members</a>
+            <a class="active" href="./events.html">Events</a>
+            <a href="./signUp.html">Registration</a>
+            <a href="./login.html">Login</a>
+        </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+        <h2>Upcoming Events</h2>
+
+    <div class="content-grid">
+
+        <!-- Event Card -->
+        <section class="panel event-card">
+            <img src="../pictures/CSUN.png" alt="CSUN Event" class="event-image">
+
+            <div class="event-text">
+                <h3>Welcome Back Matador!</h3>
+                <p>First day of classes starts <strong>January 20, 2026</strong></p>
+            </div>
+        </section>
+
+        <!-- Copy this block for future events -->
+        <!--
+        <section class="panel event-card">
+            <img src="../pictures/event2.png" class="event-image">
+            <div class="event-text">
+                <h3>Event Title</h3>
+                <p>Event description goes here</p>
+            </div>
+        </section>
+        -->
+
+    </div>
+    </main>
+
 </div>
-<br>
+
+<footer class="footer">
+    <p>© 2026 Student Recreation Center</p>
+</footer>
+
 </body>
 </html>
