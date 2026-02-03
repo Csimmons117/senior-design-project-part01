@@ -86,7 +86,7 @@ a:hover{
         align-items: center;
         justify-content: center;
         display: flex;
-        background-color: #FF0055;
+
 }
 .main{
         display:inline-flex;
@@ -96,7 +96,7 @@ a:hover{
         align-items: center;
         justify-content: center;
         gap: 20px;
-        background-color: #FF0055;
+
 
 }
 
@@ -148,7 +148,7 @@ a:hover{
         padding: 10px;
         border: black, 5px, solid;
         text-align: center;
-        background-color: #FF0055;
+       
         color: white;
 }
 
