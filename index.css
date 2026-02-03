@@ -318,7 +318,7 @@ body {
 /* Footer */
 .footer {
     text-align: center;
-    
+    padding: 15px;
     background-color: #000;
     color: #aaa;
 }
@@ -459,6 +459,8 @@ hr,
 body {
     background-color: #111;
     color: #eee;
+    margin: 0;
+    padding: 0;
 }
 
 /* Recreate HERO header */
