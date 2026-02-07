@@ -22,12 +22,10 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // Keep this if your backend runs on 3001 and exposes /api/*
+      // Proxy API requests to the backend server running on port 4000
       '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        // If your backend exposes /chat (without /api), uncomment:
-        // rewrite: (p) => p.replace(/^\/api/, '')
+        target: 'http://localhost:4000',
+        changeOrigin: true
       }
     }
   }

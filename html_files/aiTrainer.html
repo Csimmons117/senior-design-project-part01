@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Fitness Helper - Student Recreation Center</title>
+    <link rel="stylesheet" href="../index.css">
+    <style>
+        /* Full-screen iframe styling */
+        .ai-trainer-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+        }
+
+        .ai-trainer-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Loading message */
+        .loading-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        /* Back button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: #FF0055;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #cc0044;
+        }
+
+        /* Error message */
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            background-color: rgba(255, 0, 85, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .error-message h2 {
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        .error-message p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .error-message a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="ai-trainer-container">
+        <a href="../index.html" class="back-button">← Back to Main Site</a>
+        
+        <div class="loading-message" id="loadingMessage">
+            Loading AI Fitness Helper...
+        </div>
+
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <h2>AI Fitness Helper Not Running</h2>
+            <p>The AI Fitness Helper application needs to be started separately.</p>
+            <p><strong>To start the AI Fitness Helper:</strong></p>
+            <ol style="text-align: left; display: inline-block;">
+                <li>Open a terminal in the project directory</li>
+                <li>Navigate to: <code>cd ai-personal-trainer</code></li>
+                <li>Install dependencies: <code>npm install</code></li>
+                <li>Start the app: <code>npm run dev</code></li>
+                <li>In another terminal, start the server: <code>cd server && npm start</code></li>
+            </ol>
+            <p><a href="../index.html">Return to Main Site</a></p>
+        </div>
+
+        <iframe 
+            id="aiTrainerFrame"
+            class="ai-trainer-frame" 
+            src="http://localhost:5173"
+            title="AI Fitness Helper"
+            allow="camera; microphone"
+            style="display: none;">
+        </iframe>
+    </div>
+
+    <script>
+        const iframe = document.getElementById('aiTrainerFrame');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Check if the AI Fitness Helper is running
+        fetch('http://localhost:5173')
+            .then(response => {
+                if (response.ok) {
+                    // App is running, show iframe
+                    loadingMessage.style.display = 'none';
+                    iframe.style.display = 'block';
+                } else {
+                    throw new Error('App not running');
+                }
+            })
+            .catch(error => {
+                // App is not running, show error message
+                loadingMessage.style.display = 'none';
+                errorMessage.style.display = 'block';
+            });
+
+        // Handle iframe load event
+        iframe.addEventListener('load', function() {
+            loadingMessage.style.display = 'none';
+            iframe.style.display = 'block';
+        });
+
+        // Handle iframe error
+        iframe.addEventListener('error', function() {
+            loadingMessage.style.display = 'none';
+            errorMessage.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
+
