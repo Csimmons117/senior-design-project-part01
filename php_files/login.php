@@ -4,9 +4,9 @@ session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-$servername = "192.168.1.158";
-$usernameDB = "senior";
-$passwordDB = "senior";
+$servername = "192.168.8.220";
+$usernameDB = "webuser";
+$passwordDB = "webuser";
 $dbname = "csun_database";
 
 $conn = new mysqli($servername, $usernameDB, $passwordDB, $dbname);
@@ -15,13 +15,16 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+/* Get form data */
 $userName = $_POST['userName'] ?? '';
 $password = $_POST['password'] ?? '';
 
+/* Prepare query */
 $stmt = $conn->prepare(
     "SELECT studentID, userName, firstName, lastName, password
      FROM users WHERE userName = ?"
 );
+
 $stmt->bind_param("s", $userName);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -38,8 +41,8 @@ if ($result->num_rows === 0) {
 /* USER FOUND */
 $user = $result->fetch_assoc();
 
-/* PASSWORD CHECK */
-if (password_verify($password, $user['password'])) {
+/* PASSWORD CHECK (PLAIN TEXT VERSION) */
+if ($password === $user['password']) {
 
     $_SESSION['userID']    = $user['studentID'];
     $_SESSION['firstName'] = $user['firstName'];
@@ -58,3 +61,4 @@ echo "<script>
 $stmt->close();
 $conn->close();
 ?>
+

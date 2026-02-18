@@ -9,46 +9,127 @@ if (!isset($_SESSION['userID'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome</title>
+    <title>Member Dashboard</title>
     <link rel="stylesheet" href="../index.css">
+
+    <style>
+        /* Dashboard Specific */
+        .dashboard-container {
+            margin-left: 220px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .search-bar {
+            margin-bottom: 30px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background-color: #111;
+            color: #eee;
+            font-size: 16px;
+        }
+
+        .xp-container {
+            position: fixed;
+            bottom: 0;
+            left: 220px;
+            width: calc(100% - 220px);
+            background-color: #000;
+            padding: 15px;
+        }
+
+        .xp-bar {
+            width: 100%;
+            height: 25px;
+            background-color: #333;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(135deg, #b30000, #ff4d4d);
+            transition: width 0.4s ease;
+        }
+
+        .xp-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #ccc;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="logoBox">
-    <a href="../index.html"><img src="../pictures/unnamed-Photoroom.png" class="logo"></a>
-    <h1>Student Recreation Center</h1>
-</div>
-
-<hr>
-
+<!-- Sidebar -->
 <nav>
     <ul>
+        <li><a href="#" class="active">Dashboard</a></li>
         <li><a href="../index.html">Home</a></li>
-        <li><a href="../html_files/staffMember.html">Staff Members</a></li>
-        <li><a href="../html_files/events.html">Events</a></li>
-        <li><a href="../html_files/signUp.html">Registration</a></li>
-        <li><a href="../html_files/login.html">Login</a></li>
+        <li><a href="logout.php">Logout</a></li>
     </ul>
 </nav>
 
-<div class="title">
-    <h1>Welcome, <?php echo htmlspecialchars($_SESSION['firstName']); ?>!</h1>
+<!-- Main Dashboard -->
+<div class="dashboard-container">
+
+    <h2>Welcome back, <?php echo htmlspecialchars($_SESSION['firstName']); ?> 💪</h2>
+
+    <!-- Search Bar (inactive) -->
+    <div class="search-bar">
+        <input type="text" placeholder="Search workouts, exercises, stats... (coming soon)">
+    </div>
+
+    <!-- Workout Panel -->
+    <div class="panel">
+        <h3>What did you work on today?</h3>
+
+        <div class="button-group">
+            <button onclick="addXP(10)">Legs</button>
+            <button onclick="addXP(10)">Back</button>
+            <button onclick="addXP(10)">Chest</button>
+            <button onclick="addXP(8)">Abs</button>
+            <button onclick="addXP(5)">Walking</button>
+            <button onclick="addXP(7)">Running</button>
+        </div>
+    </div>
+
 </div>
 
-
-<div class="boxer" style="text-align: center;">
-    <p style="margin-bottom: 20px;">
-        You have successfully logged in to the Student Recreation Center portal.
-    </p>
-
-    <a href="logout.php" style="display: inline-block; margin-top: 10px;">
-        <button style="font-size: 20px; padding: 10px;">Logout</button>
-    </a>
+<!-- XP Bar -->
+<div class="xp-container">
+    <div class="xp-bar">
+        <div class="xp-fill" id="xpFill"></div>
+    </div>
+    <div class="xp-text">
+        Experience: <span id="xpValue">0</span> / 100
+    </div>
 </div>
 
+<script>
+    let xp = 0;
+    const maxXP = 100;
 
+    function addXP(amount) {
+        xp += amount;
+
+        if (xp > maxXP) {
+            xp = maxXP;
+        }
+
+        document.getElementById("xpValue").innerText = xp;
+        document.getElementById("xpFill").style.width = xp + "%";
+    }
+</script>
 
 </body>
-
 </html>
+
