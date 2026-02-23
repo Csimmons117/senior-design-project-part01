@@ -6,6 +6,8 @@ import { initializeAuth } from "./services/api";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import LoginPage from "./components/auth/LoginPage";
 import SignupPage from "./components/auth/SignupPage";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import ResetPassword from "./components/auth/ResetPassword";
 import Layout from "./components/layout/Layout";
 import ChatContainer from "./components/chat/ChatContainer";
 import ProfilePage from "./components/profile/ProfilePage";
@@ -32,6 +34,8 @@ export default function App() {
               {/* Public routes */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
               {/* Protected routes */}
               <Route element={<ProtectedRoute />}>

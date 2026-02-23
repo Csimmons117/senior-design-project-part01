@@ -68,6 +68,9 @@ export default function LoginPage() {
               required
               autoComplete="current-password"
             />
+            <div className="forgot-link">
+              <Link to="/forgot-password">Forgot password?</Link>
+            </div>
           </div>
 
           <button type="submit" className="auth-submit" disabled={isLoading}>

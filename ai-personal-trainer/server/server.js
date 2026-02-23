@@ -17,6 +17,7 @@ import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import cookieParser from "cookie-parser";
 import Database from "better-sqlite3";
+import nodemailer from "nodemailer";
 
 // ---------- Database Setup ----------
 const db = new Database(path.join(__dirname, "trainer.db"));
@@ -38,6 +39,16 @@ db.exec(`
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
   )
 `);
+
+  // Create password_resets table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS password_resets (
+      token TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      expires_at INTEGER NOT NULL,
+      created_at INTEGER DEFAULT (strftime('%s','now'))
+    )
+  `);
 
 console.log("✅ Database initialized");
 
@@ -64,6 +75,48 @@ app.use(cors({
 }));
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
+
+// SMTP / nodemailer setup (optional)
+const SMTP_HOST = process.env.SMTP_HOST;
+const SMTP_PORT = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : undefined;
+const SMTP_SECURE = process.env.SMTP_SECURE === "true";
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
+const FROM_EMAIL = process.env.FROM_EMAIL || `noreply@${process.env.DOMAIN || "localhost"}`;
+
+let mailer = null;
+if (SMTP_HOST && SMTP_PORT) {
+  mailer = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_SECURE,
+    auth: SMTP_USER ? { user: SMTP_USER, pass: SMTP_PASS } : undefined
+  });
+  mailer.verify()
+    .then(() => console.log("✅ SMTP transporter ready"))
+    .catch((err) => console.warn("⚠️ SMTP verify failed:", err.message));
+}
+
+async function sendResetEmail(to, resetUrl) {
+  if (!mailer) {
+    console.log("No SMTP configured; reset URL:", resetUrl);
+    return;
+  }
+
+  const html = `<p>You requested a password reset for your account. This link will expire in 1 hour.</p><p><a href="${resetUrl}">Reset your password</a></p><p>If you didn't request this, ignore this email.</p>`;
+
+  try {
+    await mailer.sendMail({
+      from: FROM_EMAIL,
+      to,
+      subject: "CSUN AI Fitness - Password reset",
+      html
+    });
+    console.log("Password reset email sent to", to);
+  } catch (e) {
+    console.error("Failed to send reset email:", e.message || e);
+  }
+}
 
 // ---------- Auth Middleware ----------
 function authenticateToken(req, res, next) {
@@ -393,6 +446,82 @@ app.post("/api/auth/refresh", (req, res) => {
 app.post("/api/auth/logout", (req, res) => {
   res.clearCookie("refreshToken");
   res.json({ ok: true });
+});
+
+// Forgot password - request a reset token
+app.post("/api/auth/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email is required" });
+
+    const emailLower = email.toLowerCase();
+    const user = db.prepare("SELECT * FROM users WHERE email = ?").get(emailLower);
+
+    // Always return success to avoid leaking which emails exist
+    if (!user) {
+      return res.json({ ok: true });
+    }
+
+    const token = uuidv4();
+    const expires_at = Math.floor(Date.now() / 1000) + 60 * 60; // 1 hour
+
+    db.prepare(`INSERT INTO password_resets (token, user_id, expires_at) VALUES (?, ?, ?)`)
+      .run(token, user.id, expires_at);
+
+    const frontend = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetUrl = `${frontend}/reset-password?token=${token}`;
+
+    // In production you should send the resetUrl via email. For development we log it.
+    console.log(`Password reset requested for ${emailLower}: ${resetUrl}`);
+
+    // Send email if SMTP is configured (best-effort)
+    try {
+      await sendResetEmail(emailLower, resetUrl);
+    } catch (e) {
+      console.error('Error sending reset email:', e.message || e);
+    }
+
+    const resp = { ok: true };
+    if (process.env.NODE_ENV !== "production") resp.resetUrl = resetUrl;
+    res.json(resp);
+  } catch (e) {
+    console.error("Forgot password error:", e);
+    res.status(500).json({ error: "Failed to create password reset" });
+  }
+});
+
+// Reset password - supply token and new password
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    if (!token || !newPassword) return res.status(400).json({ error: "Token and newPassword required" });
+    if (newPassword.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
+
+    const row = db.prepare("SELECT * FROM password_resets WHERE token = ?").get(token);
+    if (!row) return res.status(400).json({ error: "Invalid or expired token" });
+
+    const now = Math.floor(Date.now() / 1000);
+    if (now > row.expires_at) {
+      // delete expired token
+      db.prepare("DELETE FROM password_resets WHERE token = ?").run(token);
+      return res.status(400).json({ error: "Invalid or expired token" });
+    }
+
+    const user = db.prepare("SELECT * FROM users WHERE id = ?").get(row.user_id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const password_hash = await bcrypt.hash(newPassword, 10);
+    db.prepare("UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
+      .run(password_hash, user.id);
+
+    // Remove any outstanding reset tokens for this user
+    db.prepare("DELETE FROM password_resets WHERE user_id = ?").run(user.id);
+
+    res.json({ ok: true });
+  } catch (e) {
+    console.error("Reset password error:", e);
+    res.status(500).json({ error: "Failed to reset password" });
+  }
 });
 
 // ---------- User Profile Routes ----------
