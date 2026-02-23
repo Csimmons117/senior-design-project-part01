@@ -2,9 +2,9 @@
 // newMember.php
 
 // Database connection info
-$servername = "192.168.192.42";   // ← your database server IP
-$username = "root";               // ← replace with your DB username
-$password = "root";                   // ← replace with your DB password
+$servername = "192.168.8.220";   // ← your database server IP
+$username = "webuser";               // ← replace with your DB username
+$password = "webuser";                   // ← replace with your DB password
 $dbname = "csun_database";        // ← replace with your DB name
 
 // Create a new MySQL connection
@@ -29,11 +29,11 @@ if (empty($firstName) || empty($lastName) || empty($studentID) || empty($email) 
 }
 
 // Hash the password before storing
-$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+$hashedPassword = $password;
 
 // Prepare the SQL insert statement
 $stmt = $conn->prepare("
-    INSERT INTO newMember (firstName, lastName, studentID, email, userName, password)
+    INSERT INTO users (firstName, lastName, studentID, email, userName, password)
     VALUES (?, ?, ?, ?, ?, ?)
 ");
 
@@ -45,7 +45,8 @@ $stmt->bind_param("ssisss", $firstName, $lastName, $studentID, $email, $userName
 
 // Execute and handle results
 if ($stmt->execute()) {
-    echo "✅ New member added successfully!";
+    header("Location:../html_files/login.html");
+    exit();
 } else {
     echo "❌ Error inserting record: " . $stmt->error;
 }
