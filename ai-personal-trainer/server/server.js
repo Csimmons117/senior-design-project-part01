@@ -23,6 +23,9 @@ import nodemailer from "nodemailer";
 const db = new Database(path.join(__dirname, "trainer.db"));
 db.pragma("journal_mode = WAL"); // Better performance for concurrent access
 
+const CHAT_RETENTION_DAYS = 30;
+const CHAT_RETENTION_SECONDS = CHAT_RETENTION_DAYS * 24 * 60 * 60;
+
 // Create users table
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
@@ -50,7 +53,40 @@ db.exec(`
     )
   `);
 
+// Create chat history table
+db.exec(`
+  CREATE TABLE IF NOT EXISTS chat_messages (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    role TEXT NOT NULL CHECK(role IN ('user', 'assistant')),
+    content TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    expires_at INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  )
+`);
+
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_chat_messages_user_created
+  ON chat_messages(user_id, created_at)
+`);
+
+db.exec(`
+  CREATE INDEX IF NOT EXISTS idx_chat_messages_expires
+  ON chat_messages(expires_at)
+`);
+
 console.log("✅ Database initialized");
+
+function cleanupExpiredChatHistory() {
+  const now = Math.floor(Date.now() / 1000);
+  const result = db.prepare("DELETE FROM chat_messages WHERE expires_at <= ?").run(now);
+  if (result.changes > 0) {
+    console.log(`🧹 Cleaned up ${result.changes} expired chat messages`);
+  }
+}
+
+cleanupExpiredChatHistory();
 
 // ---------- JWT Config ----------
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production";
@@ -623,22 +659,73 @@ app.post("/api/trainer", optionalAuth, async (req, res) => {
 // Chat endpoint (used by frontend) - with personalization
 app.post("/api/chat", optionalAuth, async (req, res) => {
   try {
+    cleanupExpiredChatHistory();
+
     const message = req.body?.message ?? "";
     if (!message) return res.status(400).json({ error: "Missing message" });
 
     // Get user context for personalization
     let userContext = "";
+    let userId = null;
     if (req.user) {
       const user = db.prepare("SELECT * FROM users WHERE id = ?").get(req.user.userId);
       userContext = buildUserContext(user);
+      userId = user?.id || null;
     }
 
     const reply = await getReply(message, userContext);
+
+    // Save chat only for authenticated users
+    if (userId) {
+      const now = Math.floor(Date.now() / 1000);
+      const expiresAt = now + CHAT_RETENTION_SECONDS;
+      const insertMessage = db.prepare(`
+        INSERT INTO chat_messages (id, user_id, role, content, created_at, expires_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `);
+
+      const insertMany = db.transaction((messages) => {
+        for (const item of messages) {
+          insertMessage.run(uuidv4(), userId, item.role, item.content, now, expiresAt);
+        }
+      });
+
+      insertMany([
+        { role: "user", content: message },
+        { role: "assistant", content: String(reply ?? "") }
+      ]);
+    }
+
     res.json({ reply });
   } catch (e) {
     const detail = e?.response?.data || e?.cause?.response?.data || e?.message || String(e);
     console.error("Chat error:", detail);
     res.status(502).json({ error: "Chat failed", detail });
+  }
+});
+
+// Chat history for the authenticated user (last 30 days)
+app.get("/api/chat/history", authenticateToken, (req, res) => {
+  try {
+    cleanupExpiredChatHistory();
+
+    const rows = db.prepare(`
+      SELECT role, content, created_at
+      FROM chat_messages
+      WHERE user_id = ?
+      ORDER BY created_at ASC
+    `).all(req.user.userId);
+
+    const messages = rows.map((row) => ({
+      role: row.role,
+      content: row.content,
+      createdAt: row.created_at
+    }));
+
+    res.json({ messages });
+  } catch (e) {
+    console.error("Chat history fetch error:", e);
+    res.status(500).json({ error: "Failed to fetch chat history" });
   }
 });
 
