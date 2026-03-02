@@ -5,7 +5,21 @@ if (!isset($_SESSION['userID'])) {
     header("Location: login.html");
     exit();
 }
+
+require_once "db_connect.php";
+
+$userID = $_SESSION['userID'];
+
+$sql = "SELECT xp FROM members WHERE userID = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $userID);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+$currentXP = $row['xp'] ?? 0;
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +27,6 @@ if (!isset($_SESSION['userID'])) {
     <link rel="stylesheet" href="../index.css">
 
     <style>
-        /* Dashboard Specific */
         .dashboard-container {
             margin-left: 220px;
             padding: 40px;
@@ -53,7 +66,6 @@ if (!isset($_SESSION['userID'])) {
 
         .xp-fill {
             height: 100%;
-            width: 0%;
             background: linear-gradient(135deg, #b30000, #ff4d4d);
             transition: width 0.4s ease;
         }
@@ -73,22 +85,18 @@ if (!isset($_SESSION['userID'])) {
 <nav>
     <ul>
         <li><a href="#" class="active">Dashboard</a></li>
-        <li><a href="../index.html">Home</a></li>
         <li><a href="logout.php">Logout</a></li>
     </ul>
 </nav>
 
-<!-- Main Dashboard -->
 <div class="dashboard-container">
 
     <h2>Welcome back, <?php echo htmlspecialchars($_SESSION['firstName']); ?> 💪</h2>
 
-    <!-- Search Bar (inactive) -->
     <div class="search-bar">
         <input type="text" placeholder="Search workouts, exercises, stats... (coming soon)">
     </div>
 
-    <!-- Workout Panel -->
     <div class="panel">
         <h3>What did you work on today?</h3>
 
@@ -110,13 +118,22 @@ if (!isset($_SESSION['userID'])) {
         <div class="xp-fill" id="xpFill"></div>
     </div>
     <div class="xp-text">
-        Experience: <span id="xpValue">0</span> / 100
+        Experience: <span id="xpValue"></span> / 100
     </div>
 </div>
 
 <script>
-    let xp = 0;
+    let xp = <?php echo $currentXP; ?>;
     const maxXP = 100;
+
+    window.onload = function() {
+        updateXPBar();
+    }
+
+    function updateXPBar() {
+        document.getElementById("xpValue").innerText = xp;
+        document.getElementById("xpFill").style.width = xp + "%";
+    }
 
     function addXP(amount) {
         xp += amount;
@@ -125,8 +142,15 @@ if (!isset($_SESSION['userID'])) {
             xp = maxXP;
         }
 
-        document.getElementById("xpValue").innerText = xp;
-        document.getElementById("xpFill").style.width = xp + "%";
+        updateXPBar();
+
+        fetch("updateXP.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "xp=" + xp
+        });
     }
 </script>
 
