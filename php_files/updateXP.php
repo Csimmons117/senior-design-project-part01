@@ -1,18 +1,35 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
-require_once "db_connect.php";
 
 if (!isset($_SESSION['userID'])) {
-    exit();
+    exit("Not logged in");
 }
 
-$userID = $_SESSION['userID'];
-$newXP = intval($_POST['xp']);
+require_once "db_connect.php";
 
-$sql = "UPDATE members SET xp = ? WHERE userID = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ii", $newXP, $userID);
+$studentID = $_SESSION['userID'];
+$newXP = (int)($_POST['xp'] ?? 0);
+$today = date("Y-m-d");
+
+/* Update XP */
+$stmt = $conn->prepare("UPDATE users SET xp = ? WHERE studentID = ?");
+$stmt->bind_param("ii", $newXP, $studentID);
 $stmt->execute();
+$stmt->close();
 
-echo "success";
+/* Insert workout day (ignore if already exists) */
+$stmt = $conn->prepare("
+    INSERT IGNORE INTO workout_days (studentID, workout_date)
+    VALUES (?, ?)
+");
+$stmt->bind_param("is", $studentID, $today);
+$stmt->execute();
+$stmt->close();
+
+$conn->close();
+
+echo "Updated";
 ?>

@@ -575,3 +575,39 @@ body {
     transform: translateY(0);
 }
 
+/* =========================
+   GitHub Style Calendar
+========================= */
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-top: 15px;
+}
+
+.day {
+    width: 100%;
+    padding-top: 100%;
+    background-color: #222;
+    border-radius: 4px;
+}
+
+.active-day {
+    background: linear-gradient(135deg, #b30000, #ff4d4d);
+    box-shadow: 0 0 8px rgba(255, 77, 77, 0.7);
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 40px);
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.day {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    border-radius: 6px;
+    border: 1px solid #555;
+}
