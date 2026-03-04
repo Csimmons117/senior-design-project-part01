@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workout Finder</title>
+    <link rel="stylesheet" href="../index.css">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const form = document.getElementById("workoutForm");
+            const input = document.getElementById("workoutInput");
+            const result = document.getElementById("result");
+
+            const workouts = {
+                chest: ["Bench Press", "Push-Ups", "Chest Fly Machine", "Incline Dumbbell Press"],
+                arms: ["Bicep Curls", "Tricep Pushdowns", "Hammer Curls", "Overhead Tricep Extension"],
+                abs: ["Planks", "Crunches", "Leg Raises", "Russian Twists"],
+                legs: ["Squats", "Lunges", "Leg Press", "Romanian Deadlifts"],
+                quads: ["Barbell Squats", "Leg Extensions", "Step-Ups", "Hack Squat"],
+                walking: ["Treadmill Walk (20-30 min)", "Incline Walk", "Outdoor Walk", "Track Walking"]
+            };
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const userInput = input.value.toLowerCase().trim();
+                result.innerHTML = "";
+
+                let found = false;
+
+                for (let key in workouts) {
+                    if (userInput.includes(key)) {
+                        found = true;
+
+                        result.innerHTML = `
+                            <h3>You want to work on ${key}. Is that correct?</h3>
+                            <button onclick="showWorkout('${key}')">Yes</button>
+                        `;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    result.innerHTML = `
+                        <p style="color:#ff4d4d;">Sorry, I couldn't find that muscle group.</p>
+                        <p>Try: chest, arms, abs, legs, quads, or walking.</p>
+                    `;
+                }
+            });
+
+        });
+
+        function showWorkout(group) {
+            const workouts = {
+                chest: ["Bench Press", "Push-Ups", "Chest Fly Machine", "Incline Dumbbell Press"],
+                arms: ["Bicep Curls", "Tricep Pushdowns", "Hammer Curls", "Overhead Tricep Extension"],
+                abs: ["Planks", "Crunches", "Leg Raises", "Russian Twists"],
+                legs: ["Squats", "Lunges", "Leg Press", "Romanian Deadlifts"],
+                quads: ["Barbell Squats", "Leg Extensions", "Step-Ups", "Hack Squat"],
+                walking: ["Treadmill Walk (20-30 min)", "Incline Walk", "Outdoor Walk", "Track Walking"]
+            };
+
+            const result = document.getElementById("result");
+
+            let workoutList = "<ul>";
+            workouts[group].forEach(exercise => {
+                workoutList += `<li>${exercise}</li>`;
+            });
+            workoutList += "</ul>";
+
+            result.innerHTML = `
+                <h3>Recommended ${group} Workout:</h3>
+                ${workoutList}
+            `;
+        }
+    </script>
+</head>
+
+<body>
+
+<header class="hero">
+    <div class="hero-content">
+        <h1>Workout Finder</h1>
+        <p>Tell us what you want to train today</p>
+    </div>
+</header>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="workoutSearch.html" class="active">Workout Finder</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <h2>What would you like to work on today?</h2>
+
+        <section class="panel">
+            <form id="workoutForm">
+                <input 
+                    type="text" 
+                    id="workoutInput" 
+                    placeholder="Example: chest, arms, abs, legs, quads, walking"
+                    required
+                >
+                <br>
+                <button type="submit">Search Workout</button>
+            </form>
+
+            <div id="result" style="margin-top:20px;"></div>
+        </section>
+
+    </main>
+
+</div>
+
+<footer class="footer">
+    <p>© 2026 Student Recreation Center</p>
+</footer>
+
+</body>
+</html>
+
