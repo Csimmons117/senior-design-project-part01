@@ -22,7 +22,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $userData = $result->fetch_assoc();
 
-$currentXP = $userData['xp'] ?? 0;
+$totalXP = $userData['xp'] ?? 0;
 $firstName = $userData['firstName'] ?? "Member";
 
 $stmt->close();
@@ -56,7 +56,7 @@ $conn->close();
 <link rel="stylesheet" href="../index.css">
 
 <style>
-/* ===== Calendar Visibility Fix ===== */
+
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 40px);
@@ -86,6 +86,7 @@ $conn->close();
 .today {
     border: 2px solid #ff4d4d;
 }
+
 </style>
 
 </head>
@@ -93,22 +94,22 @@ $conn->close();
 <body>
 
 <header class="hero">
-    <div class="hero-content">
-        <h1>Member Dashboard</h1>
-        <h3>Welcome back, <?php echo htmlspecialchars($firstName); ?> </h3>
-    </div>
+<div class="hero-content">
+<h1>Member Dashboard</h1>
+<h3>Welcome back, <?php echo htmlspecialchars($firstName); ?></h3>
+</div>
 </header>
 
 <div class="layout">
 
 <!-- Sidebar -->
 <aside class="sidebar">
-    <nav>
-        <a class="active" href="#">Dashboard</a>
-        <a href="../html_files/aiTrainer.html">AI Fitness Helper</a>
-	<a href="../html_files/aiTrainerBACK.html">FAKE AI TEST</a>
-        <a href="logout.php">Logout</a>
-    </nav>
+<nav>
+<a class="active" href="#">Dashboard</a>
+<a href="../html_files/aiTrainer.html">AI Fitness Helper</a>
+<a href="../html_files/aiTrainerBACK.html">FAKE AI TEST</a>
+<a href="logout.php">Logout</a>
+</nav>
 </aside>
 
 <!-- Main Content -->
@@ -116,88 +117,111 @@ $conn->close();
 
 <h2>Track Your Workout</h2>
 
-<!-- Workout Buttons -->
 <div class="panel">
-    <h3>What did you work on today?</h3>
+<h3>What did you work on today?</h3>
 
-    <div class="button-group">
-        <button onclick="addXP(10)">Legs</button>
-        <button onclick="addXP(10)">Back</button>
-        <button onclick="addXP(10)">Chest</button>
-        <button onclick="addXP(8)">Abs</button>
-        <button onclick="addXP(5)">Walking</button>
-        <button onclick="addXP(7)">Running</button>
-    </div>
+<div class="button-group">
+<button onclick="addXP(10)">Legs</button>
+<button onclick="addXP(10)">Back</button>
+<button onclick="addXP(10)">Chest</button>
+<button onclick="addXP(8)">Abs</button>
+<button onclick="addXP(5)">Walking</button>
+<button onclick="addXP(7)">Running</button>
+</div>
 </div>
 
-<!-- XP Panel -->
 <div class="panel">
-    <h3>Experience</h3>
-    <p><span id="xpValue"></span> / 100</p>
-    <div style="width:100%;height:25px;background:#333;border-radius:20px;overflow:hidden;">
-        <div id="xpFill" style="height:100%;background:linear-gradient(135deg,#b30000,#ff4d4d);"></div>
-    </div>
+<h3>Experience</h3>
+
+<p>
+Level <span id="levelValue"></span><br>
+<span id="xpValue"></span> / 100
+</p>
+
+<div style="width:100%;height:25px;background:#333;border-radius:20px;overflow:hidden;">
+<div id="xpFill" style="height:100%;background:linear-gradient(135deg,#b30000,#ff4d4d);"></div>
 </div>
 
-<!-- Consistency Calendar -->
+</div>
+
 <div class="panel">
-    <h3>Consistency Tracker</h3>
+<h3>Consistency Tracker</h3>
 
-    <div class="calendar-grid">
-    <?php
-        $currentYear = date("Y");
-        $currentMonth = date("m");
-        $daysInMonth = date("t");
-        $today = date("Y-m-d");
+<div class="calendar-grid">
 
-        for ($day = 1; $day <= $daysInMonth; $day++) {
+<?php
 
-            $date = $currentYear . "-" . $currentMonth . "-" . str_pad($day, 2, "0", STR_PAD_LEFT);
+$currentYear = date("Y");
+$currentMonth = date("m");
+$daysInMonth = date("t");
+$today = date("Y-m-d");
 
-            $active = in_array($date, $workoutDays) ? "active-day" : "";
-            $isToday = ($date == $today) ? "today" : "";
+for ($day = 1; $day <= $daysInMonth; $day++) {
 
-            echo "<div class='day $active $isToday' title='$date'>$day</div>";
-        }
-    ?>
-    </div>
+$date = $currentYear . "-" . $currentMonth . "-" . str_pad($day, 2, "0", STR_PAD_LEFT);
 
+$active = in_array($date, $workoutDays) ? "active-day" : "";
+$isToday = ($date == $today) ? "today" : "";
+
+echo "<div class='day $active $isToday' title='$date'>$day</div>";
+}
+
+?>
+
+</div>
 </div>
 
 </main>
 </div>
 
 <footer class="footer">
-    <p>© 2026 Student Recreation Center</p>
+<p>© 2026 Student Recreation Center</p>
 </footer>
 
 <script>
-let xp = <?php echo (int)$currentXP; ?>;
+
 const maxXP = 100;
 
+/* total XP stored in database */
+let totalXP = <?php echo (int)$totalXP; ?>;
+
+/* calculate level + bar XP */
+let level = Math.floor(totalXP / maxXP) + 1;
+let xp = totalXP % maxXP;
+
 window.onload = function() {
-    updateXPBar();
+updateXPBar();
 }
 
 function updateXPBar() {
-    document.getElementById("xpValue").innerText = xp;
-    document.getElementById("xpFill").style.width = xp + "%";
+
+document.getElementById("xpValue").innerText = xp;
+document.getElementById("levelValue").innerText = level;
+
+let percent = (xp / maxXP) * 100;
+document.getElementById("xpFill").style.width = percent + "%";
+
 }
 
 function addXP(amount) {
-    xp += amount;
-    if (xp > maxXP) xp = maxXP;
 
-    updateXPBar();
+totalXP += amount;
 
-    fetch("updateXP.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "xp=" + xp
-    }).then(() => location.reload());
+level = Math.floor(totalXP / maxXP) + 1;
+xp = totalXP % maxXP;
+
+updateXPBar();
+
+fetch("updateXP.php", {
+method: "POST",
+headers: {
+"Content-Type": "application/x-www-form-urlencoded"
+},
+body: "xp=" + totalXP
+}).then(() => location.reload());
+
 }
+
 </script>
 
 </body>
