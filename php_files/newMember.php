@@ -25,7 +25,8 @@ $password  = $_POST['password'] ?? '';
 
 // Basic validation
 if (empty($firstName) || empty($lastName) || empty($studentID) || empty($email) || empty($userName) || empty($password)) {
-    die("Error: Please fill in all fields.");
+    header("Location:../html_files/signUp.html");
+    exit();
 }
 
 // Hash the password before storing
@@ -33,7 +34,7 @@ $hashedPassword = $password;
 
 // Prepare the SQL insert statement
 $stmt = $conn->prepare("
-    INSERT INTO users (firstName, lastName, studentID, email, userName, password)
+   i INSERT INTO users (firstName, lastName, studentID, email, userName, password)
     VALUES (?, ?, ?, ?, ?, ?)
 ");
 
@@ -47,8 +48,6 @@ $stmt->bind_param("ssisss", $firstName, $lastName, $studentID, $email, $userName
 if ($stmt->execute()) {
     header("Location:../html_files/login.html");
     exit();
-} else {
-    echo "❌ Error inserting record: " . $stmt->error;
 }
 
 // Close connections

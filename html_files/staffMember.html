@@ -4,48 +4,158 @@
     <meta charset="UTF-8">
     <title>Staff Members | Student Recreation Center</title>
     <link rel="stylesheet" href="../index.css">
+
+    <style>
+	.title {
+
+           margin: 0  0 ;/*center title lazy*/
+           text-align: center;         /* align with images */
+	}
+
+	html, body {
+            height: 100%;
+            margin: 0;
+	}
+
+         body {
+            display: flex;
+            flex-direction: column;
+	}
+
+	.footer {
+            margin-top: auto;
+	}
+        body {
+            background-color: #0b0b0b;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .team-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 50px auto;
+            flex-wrap: nowrap;
+            max-width: 1000px;
+        }
+
+        .team-member {
+            text-align: center;
+            width: 220px;
+        }
+
+        .img-box {
+            width: 200px;
+            height: 260px; /* taller for portrait images */
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 3px solid #333;
+        }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Crop TOP */
+        .crop-top {
+            object-position: top;
+        }
+
+        /* Crop BOTTOM */
+        .crop-bottom {
+            object-position:cover;
+        }
+
+        /* Default (centered) */
+        .crop-center {
+            object-position: center;
+        }
+
+        h3 {
+            margin-top: 10px;
+        }
+	.img-box {
+    	    width: 200px;
+            height: 260px;
+            overflow: hidden;
+	}
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;       /* REQUIRED */
+            object-position: 50% 5%; /* now this works */
+        }
+    </style>
 </head>
+
+<body>
+
 <div class="logoBox">
-    <a href="../index.html"><img src="../pictures/unnamed-Photoroom.png" alt="Student Recreation Center" class="logo" ></li></a>
+    <a href="../index.html">
+        <img src="../pictures/unnamed-Photoroom.png" class="logo">
+    </a>
     <h1>Student Recreation Center</h1>
 </div>
+
 <hr>
+
 <nav>
     <ul>
-    <li><a href="../index.html">Home</a></li>
-    <li><a href="./staffMember.html">Staff Members</a></li>
-    <li><a href="./events.html">Events</a></li><!--Upcoming Programs an Events-->
-    <li><a href="./signUp.html">Registration</a></li>
-    <li><a href="./login.html">Login</a></li>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="./staffMember.html">Staff Members</a></li>
+        <li><a href="./events.html">Events</a></li>
+        <li><a href="./signUp.html">Registration</a></li>
+        <li><a href="./login.html">Login</a></li>
     </ul>
 </nav>
-<body>
+
 <div class="title">
     <h1>Meet the Team</h1>
 </div>
-<div class="page-spacer">
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
-</br>
+
+<div class="team-container">
+
+    <!-- NORMAL -->
+    <div class="team-member">
+        <div class="img-box">
+            <img src="../pictures/jer.png" class="crop-center">
+        </div>
+        <h3>Jhericko Libron</h3>
+    </div>
+
+    <!-- CUT TOP -->
+    <div class="team-member">
+        <div class="img-box">
+            <img src="../pictures/john.jpg" class="crop-bottom">
+        </div>
+        <h3>Jonathan Sher</h3>
+    </div>
+
+    <!-- CUT BOTTOM -->
+    <div class="team-member">
+        <div class="img-box">
+            <img src="../pictures/Gevork.png" class="crop-bottom">
+        </div>
+        <h3>Gevork Shil-Gevorkyan</h3>
+    </div>
+
+    <!-- CUT BOTTOM -->
+	<!-- ZOOM + ADJUST -->
+<div class="team-member">
+    <div class="img-box">
+        <img src="../pictures/DOT.jpg"
+             style="object-fit: cover; object-position: 50% 80%; transform: scale(1.5);">
+    </div>
+    <h3>Cameron Simmons</h3>
 </div>
+</div>
+
 <footer class="footer">
     <p>© 2026 Student Recreation Center</p>
 </footer>
