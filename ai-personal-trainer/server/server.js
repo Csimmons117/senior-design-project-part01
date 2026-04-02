@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, ".env") });
 
-const MOCK = process.env.AI_MOCK === "true";
+const MOCK = process.env.AI_MOCK === "false";
 
 // ---------- Imports ----------
 import express from "express";
@@ -240,73 +240,42 @@ if (MOCK) {
   getReply = async (question, userContext) => mockReply(question, userContext);
   analyzeImage = async (imageBase64, prompt) => mockImageAnalysis(prompt);
 } else {
-  if (!process.env.OPENAI_API_KEY) {
-    console.error("OPENAI_API_KEY missing. Set it in server/.env or enable AI_MOCK=true for mock mode.");
+  if (!process.env.GROQ_API_KEY) {
+    console.error("GROQ_API_KEY missing. Set it in server/.env or enable AI_MOCK=true for mock mode.");
     process.exit(1);
   }
-  console.log("Environment loaded. Using real OpenAI via LangChain...");
 
-  const { ChatOpenAI } = await import("@langchain/openai");
-  const { ChatPromptTemplate } = await import("@langchain/core/prompts");
-  const { RunnableSequence } = await import("@langchain/core/runnables");
-  const { HumanMessage } = await import("@langchain/core/messages");
+  const Groq = (await import("groq-sdk")).default;
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
-  const llm = new ChatOpenAI({
-    model: "gpt-4o-mini",
-    temperature: 0.7,
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-
-  const visionLlm = new ChatOpenAI({
-    model: "gpt-4o-mini",
-    temperature: 0.7,
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-
-  const prompt = ChatPromptTemplate.fromMessages([
-    [
-      "system",
-      `You are a friendly, safe fitness coach.
+  const FITNESS_SYSTEM_PROMPT = `You are a friendly, safe fitness coach.
 Return concise, actionable workout guidance including warm-up, main sets, cooldown, and form cues.
 Adjust intensity to user's experience if mentioned.
 If medical concerns arise, recommend consulting a professional.
-When listing exercises, put the exercise name in **bold** format.
-{userContext}`
-    ],
-    ["human", "{question}"]
-  ]);
+When listing exercises, put the exercise name in **bold** format.`;
 
-  const chain = RunnableSequence.from([prompt, llm]);
+  console.log(`Environment loaded. Using Groq API (model=${GROQ_MODEL}).`);
+
   getReply = async (question, userContext = "") => {
-    const aiMsg = await chain.invoke({ question, userContext });
-    return aiMsg.content;
-  };
+    const systemContent = userContext?.trim()
+      ? `${FITNESS_SYSTEM_PROMPT}\n\n${userContext.trim()}`
+      : FITNESS_SYSTEM_PROMPT;
 
-  analyzeImage = async (imageBase64, userPrompt = "Analyze my exercise form") => {
-    const message = new HumanMessage({
-      content: [
-        {
-          type: "text",
-          text: `You are a professional fitness coach analyzing exercise form. ${userPrompt}
-
-Provide specific, actionable feedback on:
-1. What they're doing well
-2. What needs improvement
-3. Safety concerns (if any)
-4. Specific form cues to help them improve
-
-Be encouraging but honest. If you can't clearly see the exercise or form, say so.`
-        },
-        {
-          type: "image_url",
-          image_url: { url: imageBase64 }
-        }
-      ]
+    const completion = await groq.chat.completions.create({
+      model: GROQ_MODEL,
+      messages: [
+        { role: "system", content: systemContent },
+        { role: "user", content: question || "" }
+      ],
+      temperature: 0.7
     });
 
-    const response = await visionLlm.invoke([message]);
-    return response.content;
+    return completion.choices[0]?.message?.content ?? "";
   };
+
+  // Vision not wired to Groq yet; keep local mock so the camera flow still works.
+  analyzeImage = async (_imageBase64, prompt) => mockImageAnalysis(prompt);
 }
 
 // ---------- Helper Functions ----------
