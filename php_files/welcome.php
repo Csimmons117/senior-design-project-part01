@@ -106,8 +106,8 @@ $conn->close();
 <aside class="sidebar">
 <nav>
 <a class="active" href="#">Dashboard</a>
-<a href="../html_files/aiTrainer.html">AI Fitness Helper</a>
-<a href="../html_files/aiTrainerBACK.html">FAKE AI TEST</a>
+<a href="../ai-trainer/aiTrainer.html">AI Fitness Helper</a>
+<!--<a href="../html_files/aiTrainerBACK.html">FAKE AI TEST</a>-->
 <a href="logout.php">Logout</a>
 </nav>
 </aside>
