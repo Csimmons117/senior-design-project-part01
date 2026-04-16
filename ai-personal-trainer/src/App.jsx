@@ -26,7 +26,7 @@ function AuthSync({ children }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/ai-trainer">
       <AuthProvider>
         <AuthSync>
           <UserProvider>
