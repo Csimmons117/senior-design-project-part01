@@ -1,118 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Workout Finder</title>
-    <link rel="stylesheet" href="../index.css">
+<meta charset="UTF-8">
+<title>AI Trainer</title>
+<link rel="stylesheet" href="../index.css">
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+<style>
+.chat-box {
+    height: 420px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
 
-            const form = document.getElementById("workoutForm");
-            const input = document.getElementById("workoutInput");
-            const result = document.getElementById("result");
+.bubble {
+    max-width: 75%;
+    padding: 12px;
+    margin: 8px;
+    border-radius: 10px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
 
-            const workouts = {
-                chest: ["Bench Press", "Push-Ups", "Chest Fly Machine", "Incline Dumbbell Press"],
-                arms: ["Bicep Curls", "Tricep Pushdowns", "Hammer Curls", "Overhead Tricep Extension"],
-                abs: ["Planks", "Crunches", "Leg Raises", "Russian Twists"],
-                legs: ["Squats", "Lunges", "Leg Press", "Romanian Deadlifts"],
-                quads: ["Barbell Squats", "Leg Extensions", "Step-Ups", "Hack Squat"],
-                walking: ["Treadmill Walk (20-30 min)", "Incline Walk", "Outdoor Walk", "Track Walking"]
-            };
+.ai {
+    background-color: #111;
+    border-left: 4px solid #b30000;
+    align-self: flex-start;
+}
 
-            form.addEventListener("submit", function (e) {
-                e.preventDefault();
+.user {
+    background: linear-gradient(135deg, #b30000, #ff4d4d);
+    color: white;
+    align-self: flex-end;
+}
 
-                const userInput = input.value.toLowerCase().trim();
-                result.innerHTML = "";
+.chat-input {
+    display: flex;
+    margin-top: 10px;
+}
 
-                let found = false;
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+}
 
-                for (let key in workouts) {
-                    if (userInput.includes(key)) {
-                        found = true;
+.option-btn {
+    display: inline-block;
+    margin: 5px;
+    padding: 8px 12px;
+    background-color: #b30000;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-                        result.innerHTML = `
-                            <h3>You want to work on ${key}. Is that correct?</h3>
-                            <button onclick="showWorkout('${key}')">Yes</button>
-                        `;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    result.innerHTML = `
-                        <p style="color:#ff4d4d;">Sorry, I couldn't find that muscle group.</p>
-                        <p>Try: chest, arms, abs, legs, quads, or walking.</p>
-                    `;
-                }
-            });
-
-        });
-
-        function showWorkout(group) {
-            const workouts = {
-                chest: ["Bench Press", "Push-Ups", "Chest Fly Machine", "Incline Dumbbell Press"],
-                arms: ["Bicep Curls", "Tricep Pushdowns", "Hammer Curls", "Overhead Tricep Extension"],
-                abs: ["Planks", "Crunches", "Leg Raises", "Russian Twists"],
-                legs: ["Squats", "Lunges", "Leg Press", "Romanian Deadlifts"],
-                quads: ["Barbell Squats", "Leg Extensions", "Step-Ups", "Hack Squat"],
-                walking: ["Treadmill Walk (20-30 min)", "Incline Walk", "Outdoor Walk", "Track Walking"]
-            };
-
-            const result = document.getElementById("result");
-
-            let workoutList = "<ul>";
-            workouts[group].forEach(exercise => {
-                workoutList += `<li>${exercise}</li>`;
-            });
-            workoutList += "</ul>";
-
-            result.innerHTML = `
-                <h3>Recommended ${group} Workout:</h3>
-                ${workoutList}
-            `;
-        }
-    </script>
+.option-btn:hover {
+    background-color: #ff4d4d;
+    color: black;
+}
+</style>
 </head>
 
 <body>
 
-<header class="hero">
-    <div class="hero-content">
-        <h1>Workout Finder</h1>
-        <p>Tell us what you want to train today</p>
-    </div>
-</header>
+<div class="hero">
+    <h1>AI Workout Trainer</h1>
+    <p>Interactive training assistant</p>
+</div>
 
 <div class="layout">
 
     <aside class="sidebar">
         <nav>
             <a href="../php_files/welcome.php">Dashboard</a>
-            <a href="workoutSearch.html" class="active">Workout Finder</a>
+            <a href="#" class="active">AI Trainer</a>
         </nav>
     </aside>
 
     <main class="content">
-        <h2>What would you like to work on today?</h2>
+        <h2>Chat Trainer</h2>
 
         <section class="panel">
-            <form id="workoutForm">
-                <input 
-                    type="text" 
-                    id="workoutInput" 
-                    placeholder="Example: chest, arms, abs, legs, quads, walking"
-                    required
-                >
-                <br>
-                <button type="submit">Search Workout</button>
-            </form>
+            <div id="chat" class="chat-box"></div>
 
-            <div id="result" style="margin-top:20px;"></div>
+            <div class="chat-input">
+                <input id="userInput" placeholder="Type: legs, back, chest...">
+                <button onclick="handleInput()">Send</button>
+            </div>
         </section>
-
     </main>
 
 </div>
@@ -121,6 +96,234 @@
     <p>© 2026 Student Recreation Center</p>
 </footer>
 
+<script>
+const chat = document.getElementById("chat");
+
+const workouts = {
+back: `BACK WORKOUT:
+
+1. Pull-Ups
+Sets: 4
+Reps: 8–12
+
+2. Lat Pulldown
+Sets: 4
+Reps: 10–12
+
+3. Deadlift
+Sets: 4
+Reps: 5–8
+
+4. Seated Row
+Sets: 3
+Reps: 10–12
+`,
+
+legs: `LEG WORKOUT:
+
+1. Squats
+Sets: 4
+Reps: 6–10
+
+2. Leg Press
+Sets: 4
+Reps: 10–12
+
+3. Lunges
+Sets: 3
+Reps: 10 each leg
+
+4. Romanian Deadlift
+Sets: 3
+Reps: 8–12
+`,
+
+chest: `CHEST WORKOUT:
+
+1. Bench Press
+Sets: 4
+Reps: 6–10
+
+2. Incline Dumbbell Press
+Sets: 4
+Reps: 8–12
+
+3. Chest Fly
+Sets: 3
+Reps: 12–15
+
+4. Push-Ups
+Sets: 3
+To failure
+`,
+
+abs: `AB WORKOUT:
+
+1. Planks
+3 sets of 30–60 sec
+
+2. Crunches
+3 sets of 15–20
+
+3. Leg Raises
+3 sets of 12–15
+`,
+
+running: `RUNNING:
+
+• 5 min warm-up
+• 30 sec sprint / 1 min walk x8
+• 15–20 min steady run
+`,
+
+walking: `WALKING:
+
+• 30–45 min brisk pace
+• Optional incline treadmill
+`
+};
+
+const foods = {
+bulk: `BULKING:
+• Chicken & rice
+• Steak & potatoes
+• Protein shakes`,
+lean: `LEAN:
+• Chicken salad
+• Turkey wraps
+• Egg whites`,
+"reduce fat": `FAT LOSS:
+• Salmon & veggies
+• Quinoa bowls
+• Lean stir fry`
+};
+
+/* ---------- CORE FUNCTIONS ---------- */
+
+function addMessage(text, type="ai") {
+    const bubble = document.createElement("div");
+    bubble.className = `bubble ${type}`;
+    bubble.textContent = text;
+    chat.appendChild(bubble);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function typeMessage(text, callback=null) {
+    const bubble = document.createElement("div");
+    bubble.className = "bubble ai";
+    chat.appendChild(bubble);
+
+    let i = 0;
+    function typing() {
+        bubble.textContent = text.substring(0, i);
+        i++;
+        chat.scrollTop = chat.scrollHeight;
+
+        if (i <= text.length) {
+            setTimeout(typing, 10);
+        } else if (callback) {
+            callback();
+        }
+    }
+    typing();
+}
+
+function clearOptions() {
+    document.querySelectorAll(".option-btn").forEach(btn => btn.remove());
+}
+
+function addOptions(options) {
+    const container = document.createElement("div");
+
+    options.forEach(opt => {
+        const btn = document.createElement("span");
+        btn.className = "option-btn";
+        btn.textContent = opt.label;
+
+        btn.onclick = () => {
+            clearOptions();
+            opt.action();
+        };
+
+        container.appendChild(btn);
+    });
+
+    chat.appendChild(container);
+}
+
+/* ---------- FLOW CONTROL ---------- */
+
+function restartFlow() {
+    typeMessage("\nAnything else you want to train?", () => {
+        document.getElementById("userInput").focus();
+    });
+}
+
+function handleInput() {
+    const input = document.getElementById("userInput");
+    const text = input.value.toLowerCase().trim();
+
+    if (!text) return;
+
+    addMessage(input.value, "user");
+    input.value = "";
+
+    let found = false;
+
+    for (let key in workouts) {
+        if (text.includes(key)) {
+            found = true;
+
+            typeMessage(
+`Analyzing your request...
+
+You want to train your ${key}.
+
+Is that correct?`,
+            () => {
+                addOptions([
+                    {label: "Yes", action: () => confirmWorkout(key)},
+                    {label: "No", action: restartFlow}
+                ]);
+            });
+
+            break;
+        }
+    }
+
+    if (!found) {
+        typeMessage("Try: chest, back, legs, abs, running, walking.");
+    }
+}
+
+function confirmWorkout(group) {
+    typeMessage(`Generating your ${group} workout...\n\n${workouts[group]}`, () => {
+        typeMessage("Would you like food recommendations?", () => {
+            addOptions([
+                {label: "Yes", action: foodChoice},
+                {label: "No", action: () => typeMessage("You're all set 💪", restartFlow)}
+            ]);
+        });
+    });
+}
+
+function foodChoice() {
+    typeMessage("Choose your goal:", () => {
+        addOptions([
+            {label: "Bulk", action: () => showFood("bulk")},
+            {label: "Lean", action: () => showFood("lean")},
+            {label: "Reduce Fat", action: () => showFood("reduce fat")}
+        ]);
+    });
+}
+
+function showFood(goal) {
+    typeMessage(foods[goal], restartFlow);
+}
+
+/* ---------- START ---------- */
+typeMessage("Hi 👋\n\nWhat would you like to train today?");
+</script>
+
 </body>
 </html>
-
