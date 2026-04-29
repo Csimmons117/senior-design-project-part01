@@ -101,22 +101,24 @@
 
         <div class="error-message" id="errorMessage" style="display: none;">
             <h2>AI Fitness Helper Not Running</h2>
-            <p>The AI Fitness Helper application needs to be started separately.</p>
+            <p>The AI Fitness Helper application is not reachable at the configured URL.</p>
+            <p><strong>Resolved URL:</strong> <code id="resolvedUrlText"></code></p>
             <p><strong>To start the AI Fitness Helper:</strong></p>
             <ol style="text-align: left; display: inline-block;">
                 <li>Open a terminal in the project directory</li>
                 <li>Navigate to: <code>cd ai-personal-trainer</code></li>
                 <li>Install dependencies: <code>npm install</code></li>
                 <li>Start the app: <code>npm run dev</code></li>
-                <li>In another terminal, start the server: <code>cd server && npm start</code></li>
+                <li>In another terminal, start the server: <code>cd server && npm run dev</code></li>
             </ol>
+            <p>For production, deploy the AI app to <code>/ai-personal-trainer/</code> on your domain.</p>
             <p><a href="../index.html">Return to Main Site</a></p>
         </div>
 
         <iframe 
             id="aiTrainerFrame"
             class="ai-trainer-frame" 
-            src="http://localhost:5173"
+            src=""
             title="AI Fitness Helper"
             allow="camera; microphone"
             style="display: none;">
@@ -127,17 +129,38 @@
         const iframe = document.getElementById('aiTrainerFrame');
         const loadingMessage = document.getElementById('loadingMessage');
         const errorMessage = document.getElementById('errorMessage');
+        const resolvedUrlText = document.getElementById('resolvedUrlText');
+
+        function resolveAiTrainerUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const fromQuery = params.get('ai_url');
+            if (fromQuery) {
+                return fromQuery;
+            }
+
+            const host = window.location.hostname;
+            const isLocal = host === 'localhost' || host === '127.0.0.1';
+            if (isLocal) {
+                return 'http://localhost:5173';
+            }
+
+            return `${window.location.origin}/ai-personal-trainer/`;
+        }
+
+        const aiTrainerUrl = resolveAiTrainerUrl();
+        iframe.src = aiTrainerUrl;
+        resolvedUrlText.textContent = aiTrainerUrl;
 
         // Check if the AI Fitness Helper is running
-        fetch('http://localhost:5173')
+        fetch(aiTrainerUrl, { method: 'GET', mode: 'no-cors' })
             .then(response => {
-                if (response.ok) {
-                    // App is running, show iframe
+                // In no-cors mode, browser may return opaque response; treat fetch success as reachable
+                if (response) {
                     loadingMessage.style.display = 'none';
                     iframe.style.display = 'block';
-                } else {
-                    throw new Error('App not running');
+                    return;
                 }
+                throw new Error('App not reachable');
             })
             .catch(error => {
                 // App is not running, show error message

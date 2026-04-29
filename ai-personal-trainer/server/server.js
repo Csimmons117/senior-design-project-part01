@@ -93,24 +93,45 @@ const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production";
 const JWT_EXPIRES = "15m";
 const REFRESH_EXPIRES = "7d";
 
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const DEFAULT_ALLOWED_ORIGINS = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://localhost:8000",
+  "http://localhost:80",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:8000",
+  "http://127.0.0.1:80",
+  "null" // file:// protocol in browsers
+];
+
+const ALLOWED_ORIGINS = [
+  ...new Set([
+    ...DEFAULT_ALLOWED_ORIGINS,
+    FRONTEND_URL,
+    ...(process.env.ALLOWED_ORIGINS || "")
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean)
+  ])
+];
+
 // ---------- Express Setup ----------
 const app = express();
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "http://localhost:80",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:80",
-    "null" // Allow file:// protocol
-  ],
+  origin: (origin, callback) => {
+    // Allow non-browser requests (curl, health checks, server-to-server)
+    if (!origin) return callback(null, true);
+    if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true
 }));
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
+
+console.log("Allowed CORS origins:", ALLOWED_ORIGINS);
 
 // SMTP / nodemailer setup (optional)
 const SMTP_HOST = process.env.SMTP_HOST;
@@ -473,8 +494,7 @@ app.post("/api/auth/forgot-password", async (req, res) => {
     db.prepare(`INSERT INTO password_resets (token, user_id, expires_at) VALUES (?, ?, ?)`)
       .run(token, user.id, expires_at);
 
-    const frontend = process.env.FRONTEND_URL || "http://localhost:5173";
-    const resetUrl = `${frontend}/reset-password?token=${token}`;
+    const resetUrl = `${FRONTEND_URL}/reset-password?token=${token}`;
 
     // In production you should send the resetUrl via email. For development we log it.
     console.log(`Password reset requested for ${emailLower}: ${resetUrl}`);

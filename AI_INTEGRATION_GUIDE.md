@@ -9,8 +9,9 @@ The AI Fitness Helper is a React-based application that has been linked to the m
 ## Architecture
 
 - **Main Website**: Static HTML pages (index.html, html_files/*.html)
-- **AI Fitness Helper Frontend**: React app running on `http://localhost:5173`
+- **AI Fitness Helper Frontend**: React app (Vite) running on `http://localhost:5173` in development
 - **AI Fitness Helper Backend**: Express server running on `http://localhost:4000`
+- **Production Goal**: Serve both your website + AI trainer from the same public domain
 
 ## How to Access
 
@@ -77,12 +78,12 @@ The main website is static HTML and can be opened directly:
 - Displays helpful error message if the AI app isn't running
 
 ### CORS Configuration
-The backend server has been configured to accept requests from:
-- `http://localhost:5173` (React dev server)
-- `http://localhost:3000`
-- `http://localhost:8000` (common HTTP server port)
-- `http://localhost:80`
-- `file://` protocol (for direct HTML file access)
+The backend server now supports environment-driven CORS:
+- Local defaults for localhost development
+- `FRONTEND_URL` for your main frontend URL
+- `ALLOWED_ORIGINS` for additional production domains/origins (comma separated)
+
+This allows local development and public deployment using your domain without changing source code.
 
 ## Testing the Integration
 
@@ -119,12 +120,125 @@ The backend server has been configured to accept requests from:
 4. **html_files/login.html** - Added navigation link
 5. **html_files/signUp.html** - Added navigation link
 6. **html_files/aiTrainer.html** - New page that embeds the AI app
-7. **ai-personal-trainer/server/server.js** - Updated CORS settings
-8. **ai-personal-trainer/vite.config.js** - Fixed proxy target port
+7. **ai-personal-trainer/server/server.js** - Updated CORS settings to support production origins via env vars
+8. **ai-personal-trainer/vite.config.js** - Added env-driven base path and API proxy target
+9. **ai-personal-trainer/.env.production.example** - Frontend production environment template
+10. **ai-personal-trainer/server/.env.production.example** - Backend production environment template
+
+---
+
+## Production Deployment (Public Domain)
+
+Use this exact model so your local AI trainer setup also works publicly when deployed.
+
+### Target URL Layout
+
+- Main site: `https://yourdomain.com/`
+- AI trainer frontend: `https://yourdomain.com/ai-personal-trainer/`
+- AI trainer backend API: `https://yourdomain.com/api/...`
+
+The AI embed page (`html_files/aiTrainer.html`) now resolves automatically:
+- Local: `http://localhost:5173`
+- Public domain: `/ai-personal-trainer/`
+
+### 1) Build Frontend for Production
+
+From `ai-personal-trainer/`:
+
+```bash
+# Create ai-personal-trainer/.env.production from the example
+npm install
+npm run build
+```
+
+Set in `ai-personal-trainer/.env.production`:
+
+```env
+VITE_APP_BASE=/ai-personal-trainer/
+VITE_API_BASE=https://yourdomain.com
+```
+
+Deploy the generated `ai-personal-trainer/dist` contents to your server path mapped to:
+
+`https://yourdomain.com/ai-personal-trainer/`
+
+### 2) Run Backend API on Server
+
+From `ai-personal-trainer/server/`:
+
+```bash
+# Create ai-personal-trainer/server/.env from the production example
+npm install
+node server.js
+```
+
+Set in `ai-personal-trainer/server/.env`:
+
+```env
+NODE_ENV=production
+PORT=4000
+JWT_SECRET=replace-with-strong-secret
+FRONTEND_URL=https://yourdomain.com/ai-personal-trainer
+ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+```
+
+### 3) Reverse Proxy (Nginx Example)
+
+Serve static frontend + route API to Node backend:
+
+```nginx
+server {
+    server_name yourdomain.com www.yourdomain.com;
+
+    # Main site root
+    root /var/www/main-site;
+    index index.html;
+
+    # Main website
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # AI trainer static build
+    location /ai-personal-trainer/ {
+        alias /var/www/ai-personal-trainer/dist/;
+        try_files $uri $uri/ /ai-personal-trainer/index.html;
+    }
+
+    # API to Express backend
+    location /api/ {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### 4) Keep Backend Running
+
+Use a process manager (recommended):
+
+```bash
+npm install -g pm2
+pm2 start server.js --name ai-trainer-api
+pm2 save
+pm2 startup
+```
+
+### 5) Verify Public Deployment
+
+1. Open `https://yourdomain.com/html_files/aiTrainer.html`
+2. Confirm iframe loads AI trainer app
+3. Confirm login/signup and chat work
+4. Confirm API health endpoint: `https://yourdomain.com/api/health`
 
 ## Next Steps
 
-- Consider deploying both the main website and AI app to a production server
+- Set up HTTPS certificates (Let's Encrypt)
+- Move secrets to secure environment management
 - Implement single sign-on (SSO) between main site and AI app
 - Add user session persistence across both applications
 
