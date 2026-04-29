@@ -13,6 +13,12 @@ import ChatContainer from "./components/chat/ChatContainer";
 import ProfilePage from "./components/profile/ProfilePage";
 import "./index.css";
 
+const routerBasename = (() => {
+  const base = import.meta.env.BASE_URL || "/";
+  if (base === "/") return "/";
+  return base.replace(/\/$/, "");
+})();
+
 // Sync auth token with API service
 function AuthSync({ children }) {
   const { token } = useAuth();
@@ -26,7 +32,7 @@ function AuthSync({ children }) {
 
 export default function App() {
   return (
-    <BrowserRouter basename="/ai-trainer">
+    <BrowserRouter basename={routerBasename}>
       <AuthProvider>
         <AuthSync>
           <UserProvider>

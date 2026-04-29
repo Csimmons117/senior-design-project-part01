@@ -29,7 +29,27 @@ The AI Fitness Helper is a React-based application that has been linked to the m
 
 You need to run **two separate servers**:
 
-#### 1. Start the Backend Server (Port 4000)
+#### 1. Configure the Backend Environment
+
+Copy the example env file and add your own Groq API key:
+
+```bash
+cd ai-personal-trainer/server
+cp .env.example .env
+```
+
+Set these values in `ai-personal-trainer/server/.env`:
+
+```env
+AI_MOCK=false
+GROQ_API_KEY=your-groq-api-key-here
+JWT_SECRET=replace-with-a-long-random-secret
+FRONTEND_URL=http://localhost:5173
+```
+
+Use `AI_MOCK=true` only when you want local mock responses without making Groq API calls.
+
+#### 2. Start the Backend Server (Port 4000)
 
 ```bash
 cd ai-personal-trainer/server
@@ -39,12 +59,13 @@ npm start
 
 The server will start on `http://localhost:4000`
 
-#### 2. Start the Frontend React App (Port 5173)
+#### 3. Configure and Start the Frontend React App (Port 5173)
 
 In a **new terminal**:
 
 ```bash
 cd ai-personal-trainer
+cp .env.example .env  # First time only
 npm install  # First time only
 npm run dev
 ```
@@ -180,6 +201,9 @@ PORT=4000
 JWT_SECRET=replace-with-strong-secret
 FRONTEND_URL=https://yourdomain.com/ai-personal-trainer
 ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+AI_MOCK=false
+GROQ_API_KEY=your-groq-api-key-here
+GROQ_MODEL=llama-3.3-70b-versatile
 ```
 
 ### 3) Reverse Proxy (Nginx Example)
