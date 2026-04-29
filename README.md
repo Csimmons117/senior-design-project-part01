@@ -11,3 +11,7 @@ We are following the SDLC as aligned with **CIT 480 course topics**:
 3. **Design** → Architecture diagrams, UI prototypes, ADRs  
 4. **Implementation (Phase I)** → Vertical slice (login, check-in, GPT coaching, admin basics)  
 5. **Transition & Acceptance** → Deployment runbook, acceptance tests  
+
+
+
+

@@ -106,9 +106,9 @@ a:hover{
 .picture{
         width: 150px;
         height: 150px;
-        border: 2px,solid black;
+/*        border: 2px,solid black;*/
         overflow: hidden;
-        background-color: black;
+/*        background-color: black;*/
 
 
 }
@@ -143,13 +143,13 @@ a:hover{
 
 }
 .imageLeft{
-        border: black, 5px, solid;
+/*        border: black, 5px, solid;*/
 
 }
 
 .description{
         padding: 10px;
-        border: black, 5px, solid;
+/*        border: black, 5px, solid;*/
         text-align: center;
        
         color: white;
@@ -162,7 +162,7 @@ a:hover{
         background-image: url(./pictures/src_gym_image.jpg);
         background-repeat: no-repeat;
         background-size: cover;
-        border: black,10px,solid;
+/*        border: black,10px,solid;*/
 }
 
 .childBox{
