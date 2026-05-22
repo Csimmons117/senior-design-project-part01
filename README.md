@@ -1,4 +1,4 @@
-# CSUN CIT 480 Senior Project — Gym App Revamp (Web Version)
+# ToroForge AI – CSUN CIT 480 Senior Project — Gym App Revamp (Web Version)
 # [Website](https://csimmons117.github.io/senior-design-project-part01/)
 ## Overview
 This project is our senior design capstone for CIT 480/CIT481 at CSUN.  
